@@ -1,7 +1,13 @@
-open class Person(val name: String, var lebenspunkte: Int, var angriff: Int, var verteidigung: Int) {
+open class Person(val name: String,
+                  var lebenspunkte: Int,
+                  open val maxLebenspunkte: Int,
+                  var angriff: Int,
+                  var verteidigung: Int
+) {
     open var blockt: Boolean = false
+
     fun sprechen() {
-        println("HILFE!!")
+        println("$name ruft verzweifelt: 'HILFE!! Wer wird mir in meiner Not zur Seite stehen?'")
     }
 
     open fun erleideSchaden(schaden: Double) {
@@ -19,9 +25,9 @@ open class Person(val name: String, var lebenspunkte: Int, var angriff: Int, var
             if (lebenspunkte < 0) {
                 lebenspunkte = 0
             }
-            println("$name erleidet $reduzierterSchaden Schaden und hat nun $lebenspunkte Lebenspunkte.")
+            println("Ein mächtiger Schlag trifft $name! Er verliert $reduzierterSchaden Lebenspunkte und ist nun nur noch bei $lebenspunkte Lebenspunkten.")
         } else {
-            println("$name blockt den Angriff und erleidet keinen Schaden.")
+            println("Mit einer unglaublichen Reaktionsfähigkeit blockt $name den Angriff und bleibt unverletzt!")
         }
     }
 

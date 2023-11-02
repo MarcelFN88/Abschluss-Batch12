@@ -11,7 +11,7 @@ class Manipulator(name: String) : Held(name, "Manipulator") {
         super.trainieren()
     }
     fun manipulatorAngriff() {
-        println("$name, wähle einen Attacke:")
+        println("$name, tief in der Schlacht, musst du dich entscheiden, welche Technik du nutzen möchtest:")
         println("1. Schildbumerang")
         println("2. Umwerfen")
         println("3. Blocken")
@@ -23,7 +23,7 @@ class Manipulator(name: String) : Held(name, "Manipulator") {
             "2" -> "Umwerfen"
             "3" -> "Blocken"
             else -> {
-                println("Ungültige Auswahl. Es wird ein Schildbumerang ausgeführt.")
+                println("In der Hitze des Gefechts zögert $name einen Moment, entscheidet sich aber letztlich für den Schildbumerang.")
                 "Schildbumerang"
             }
         }
@@ -35,7 +35,6 @@ class Manipulator(name: String) : Held(name, "Manipulator") {
             else -> 0
         }
 
-        println("$name Attackiert mit einem $attacke und fügt $schaden Schaden zu.")
+        println("Mit einer geschickten Bewegung attackiert $name mit einem $attacke. Die Gegner werden von der Kraft des Angriffs überrascht und erleiden $schaden Schaden.")
     }
-
 }

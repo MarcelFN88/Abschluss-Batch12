@@ -7,14 +7,16 @@ class Zauberer(name: String) : Held(name, "Zauberer") {
         super.zaubernLernen()
         magie += 10
     }
+
     override fun trainieren() {
         super.trainieren()
     }
+
     fun zaubererAngriff() {
-        println("$name, wähle einen Zauberspruch:")
-        println("1. Feuerball")
-        println("2. Blitzschlag")
-        println("3. Eisstrahl")
+        println("$name, im flackernden Licht, fragt sich selbst: 'Welchen Zauberspruch soll ich wirken?'")
+        println("1. Feuerball - Ein Ball aus Flammen stürmt auf den Feind zu.")
+        println("2. Blitzschlag - Ein heftiger Blitz trifft den Gegner.")
+        println("3. Eisstrahl - Ein eisiger Strahl friert alles auf seinem Weg ein.")
 
         val auswahl = readln()
 
@@ -23,7 +25,7 @@ class Zauberer(name: String) : Held(name, "Zauberer") {
             "2" -> "Blitzschlag"
             "3" -> "Eisstrahl"
             else -> {
-                println("Ungültige Auswahl. Es wird ein Feuerball ausgeführt.")
+                println("In seiner Unsicherheit entscheidet sich $name für einen Feuerball.")
                 "Feuerball"
             }
         }
@@ -35,7 +37,6 @@ class Zauberer(name: String) : Held(name, "Zauberer") {
             else -> 0
         }
 
-        println("$name zaubert $zauberspruch und fügt $schaden Schaden zu.")
+        println("Mit einem kraftvollen Schwenk seines Zauberstabs entfesselt $name einen mächtigen $zauberspruch und verursacht dabei $schaden Schaden an seinem Gegner.")
     }
-
 }
