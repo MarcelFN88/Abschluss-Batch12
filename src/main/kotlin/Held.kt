@@ -1,6 +1,5 @@
 import kotlin.random.Random
 
-
 open class Held(
     name: String,
     val heldenTyp: String,
@@ -8,9 +7,36 @@ open class Held(
     angriff: Int = 10,
     verteidigung: Int = 10,
     var magie: Int = 10,
-    open val maxLebenspunkte: Int = 200
+    var maxLebenspunkte: Int = 200
 ) :
     Person(name, lebenspunkte, angriff, verteidigung) {
+
+
+    fun blocken() {
+        blockt = true
+    }
+
+    override fun erleideSchaden(schaden: Double) {
+        val reduzierterSchaden: Int
+
+        if (blockt) {
+            reduzierterSchaden = (schaden / 2).toInt()
+            blockt = false
+        } else {
+            reduzierterSchaden = (schaden - verteidigung).toInt()
+        }
+
+        if (reduzierterSchaden > 0) {
+            lebenspunkte -= reduzierterSchaden
+            if (lebenspunkte < 0) {
+                lebenspunkte = 0
+            }
+            println("$name erleidet $reduzierterSchaden Schaden und hat nun $lebenspunkte Lebenspunkte.")
+        } else {
+            println("$name blockt den Angriff und erleidet keinen Schaden.")
+        }
+    }
+
 
     open fun mitSchwertKaempfenLernen() {
         angriff += 20
@@ -30,7 +56,7 @@ open class Held(
         println("Trainiert mit dem Schild sich zu verteidigen")
     }
 
-    fun trainieren() {
+    open fun trainieren() {
         println(
             "Möchtest Du mit dem Schwert trainieren,\n" +
                     " zaubern lernen oder mit dem Schild deine verteidigung stärken?"
@@ -55,7 +81,7 @@ open class Held(
             }
 
             else -> {
-                println("Ungültige Auswahl. Bitte wählen Sie 1 oder 2.")
+                println("Ungültige Auswahl. Bitte wählen Sie 1 oder 2 oder 3.")
             }
         }
     }
@@ -83,5 +109,3 @@ open class Held(
     }
 
 }
-
-

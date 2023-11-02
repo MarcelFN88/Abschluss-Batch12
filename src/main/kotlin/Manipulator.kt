@@ -7,7 +7,9 @@ class Manipulator(name: String) : Held(name, "Manipulator") {
         super.verteidigenLernen()
         verteidigung += 10
     }
-
+    override fun trainieren() {
+        super.trainieren()
+    }
     fun manipulatorAngriff() {
         println("$name, wähle einen Attacke:")
         println("1. Schildbumerang")
@@ -21,8 +23,8 @@ class Manipulator(name: String) : Held(name, "Manipulator") {
             "2" -> "Umwerfen"
             "3" -> "Blocken"
             else -> {
-                println("Ungültige Auswahl. Es wird ein Schwertschlag ausgeführt.")
-                "Schwertschlag"
+                println("Ungültige Auswahl. Es wird ein Schildbumerang ausgeführt.")
+                "Schildbumerang"
             }
         }
 

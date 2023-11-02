@@ -7,7 +7,9 @@ class Krieger(name: String) : Held(name, "Krieger") {
         super.mitSchwertKaempfenLernen()
         angriff += 10
     }
-
+    override fun trainieren() {
+        super.trainieren()
+    }
     fun kriegerAngriff() {
         println("$name, wähle einen Attacke:")
         println("1. Schwertschlag")
@@ -37,4 +39,3 @@ class Krieger(name: String) : Held(name, "Krieger") {
     }
 
 }
-

@@ -28,6 +28,7 @@ open class Beutel {
                 }
                 inventar.removeAt(auswahl - 1)
             }
+
             else -> {
                 println("Ungültige Auswahl.")
             }

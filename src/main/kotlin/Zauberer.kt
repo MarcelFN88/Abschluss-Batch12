@@ -7,7 +7,9 @@ class Zauberer(name: String) : Held(name, "Zauberer") {
         super.zaubernLernen()
         magie += 10
     }
-
+    override fun trainieren() {
+        super.trainieren()
+    }
     fun zaubererAngriff() {
         println("$name, wähle einen Zauberspruch:")
         println("1. Feuerball")
@@ -36,7 +38,4 @@ class Zauberer(name: String) : Held(name, "Zauberer") {
         println("$name zaubert $zauberspruch und fügt $schaden Schaden zu.")
     }
 
-
-
 }
-
