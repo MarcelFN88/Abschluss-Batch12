@@ -12,7 +12,7 @@ object SoundPlayer {
             clip.open(audioInputStream)
             clip.start()
             while (clip.isRunning) {
-                Thread.sleep(10)
+                Thread.sleep(5000)
             }
             clip.close()
         } catch (ex: Exception) {
