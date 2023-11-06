@@ -39,19 +39,6 @@ class Schatten {
         }
     }
 
-    fun teamAngriff() {
-        if (aktiv) {
-            println("Der Schatten bereitet sich auf einen mächtigen Angriff vor...")
-            when ((1..4).random()) {
-                1 -> println("Der Schatten entfesselt die Dunkle Welle, die das gesamte Team trifft!")
-                2 -> println("Der Schatten beschwört Schattengeister, die das Team angreifen!")
-                3 -> println("Der Schatten sendet eine Dunkle Aura aus, die das Team schwächt!")
-                4 -> println("Der Schatten entfesselt einen Schattenschrei, der das Team erschreckt!")
-            }
-        } else {
-            println("Der Schatten kann nicht angegriffen werden, da er nicht aktiv ist.")
-        }
-    }
 
     fun schattenAngriff(team: List<Held>): Int {
         if (!aktiv) return 0

@@ -28,7 +28,7 @@ class Drache(
         }
     }
 
-    override fun angreifenHeld(team: List<Held>): Int {
+    override fun angreifen(team: List<Held>): Int {
         rundenZaehler++
 
         if (rundenZaehler % 3 == 0) {

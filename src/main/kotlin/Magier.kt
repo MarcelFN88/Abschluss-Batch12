@@ -43,17 +43,17 @@ class Magier(
         """.trimMargin()
         )
 
-        val auswahl = readLine()?.toIntOrNull()
+        val auswahl = readln()
         return when (auswahl) {
-            1 -> {
+            "1" -> {
                 println("Du beschwörst einen mächtigen Feuerball, der die Luft erzittern lässt, bevor er auf dein Ziel zurast.")
                 magie + Random.nextInt(0, 10)  // Zufälliger Schaden zwischen 0 und 10, sollte sich auf Magie stattdessen von Angriff beziehen
             }
-            2 -> {
+            "2" -> {
                 println("Mit einer Bewegung deiner Hand rufen deine Zauber frostige Ketten herbei, die deinen Feind lähmen.")
                 magie + Random.nextInt(0, 5)   // Zufälliger Schaden zwischen 0 und 5, sollte sich auf Magie stattdessen von Angriff beziehen
             }
-            3 -> {
+            "3" -> {
                 println("Deine Zauber entfesseln eine schockierende Welle elektrischer Energie, die in der Luft knistert.")
                 magie  // Hier könnte man auch einen zusätzlichen Effekt hinzufügen, z.B. eine Chance, den Gegner zu betäuben
             }

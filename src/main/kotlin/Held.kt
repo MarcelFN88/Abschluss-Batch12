@@ -1,4 +1,3 @@
-import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.TimeUnit
@@ -133,8 +132,8 @@ open class Held(
         return true
     }
 
-    private val timer = Timer()
-    val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
+
+    private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
 
     fun benutzeItem(beutel: Beutel) {
         println(
@@ -174,8 +173,8 @@ open class Held(
                 """.trimMargin()
                     )
 
-                    var gewaehlterWert = ""
-                    var urspruenglicherWert = 0
+                    val gewaehlterWert: String
+                    val urspruenglicherWert: Int
 
                     when (readln()) {
                         "1" -> {

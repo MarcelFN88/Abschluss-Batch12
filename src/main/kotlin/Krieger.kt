@@ -41,17 +41,17 @@ class Krieger(
         """.trimMargin()
         )
 
-        val auswahl = readln().toIntOrNull()
+        val auswahl = readln()
         return when (auswahl) {
-            1 -> {
+            "1" -> {
                 println("Du schwingst dein Schwert in einem mächtigen Bogen und entfesselst die Wut deiner Ahnen.")
                 angriff + Random.nextInt(0, 10)
             }
-            2 -> {
+            "2" -> {
                 println("Mit einem kraftvollen Stoß deines Schildes wirfst du den Gegner zurück und zeigst die Wehrhaftigkeit Mythrias.")
                 angriff + Random.nextInt(0, 5)
             }
-            3 -> {
+            "3" -> {
                 println("Dein Brüllen hallt über das Schlachtfeld, und Freund wie Feind spüren die Macht deiner Stimme.")
                 angriff
             }

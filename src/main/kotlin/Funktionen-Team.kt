@@ -2,6 +2,7 @@ import java.io.IOException
 import java.nio.file.Paths
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.LineUnavailableException
+import kotlin.system.exitProcess
 
 fun playMusic(path: String) {
     try {
@@ -46,7 +47,7 @@ fun erstelleTeam(): List<Held> {
     val magier = Magier("$magierName $magierNachname", 1000, 1000, 25, 40, 25)
     team.add(magier)
 
-    val manipulatorName = namenMap.keys.minus(listOf(kriegerName, magierName)).random()
+    val manipulatorName = namenMap.keys.minus(listOf(kriegerName, magierName).toSet()).random()
     val manipulatorNachname = namenMap[manipulatorName]?.random() ?: "Unknown"
     val manipulator = Manipulator("$manipulatorName $manipulatorNachname", 1050, 1050, 28, 35, 28)
     team.add(manipulator)
@@ -142,7 +143,7 @@ fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
     )
 
     var runde = 1
-    var heldenLebendig = true
+    var heldenLebendig: Boolean
     while (team.any { it.lebenspunkte > 0 } && boesewicht.lebenspunkte > 0) {
         Thread.sleep(1000)
         println("\nRunde $runde")
@@ -300,7 +301,7 @@ fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
 
                 "2" -> {
                     println("\nGegen welchen Gegner möchtest du kämpfen? (Dunkler Magier/Drache)")
-                    val gegnerName = readln() ?: ""
+                    val gegnerName = readln()
                     rollenspielSimulation(team, gegnerName)
                     for (held in team) {
                         held.lebenspunkte = held.maxLebenspunkte
@@ -388,7 +389,7 @@ fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
 
             "3" -> {
                 typePrint("\u001B[36m\nMöge dein Weg dich dorthin führen, wo das Licht von Mythria am hellsten scheint. Auf Wiedersehen!\u001B[0m")
-                System.exit(0)
+                exitProcess(0)
             }
 
             else -> {

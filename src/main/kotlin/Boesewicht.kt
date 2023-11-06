@@ -28,13 +28,13 @@ open class Boesewicht(
         return when (Random.nextInt(1, 4)) {
             1 -> {
                 val schaden = Random.nextInt(20, 40)
-                println("${name} führt mit unvorstellbarer Dunkelheit einen dämonischen Schlag aus und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
+                println("$name führt mit unvorstellbarer Dunkelheit einen dämonischen Schlag aus und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
                 Pair("Dämonischer Schlag", schaden)
             }
 
             2 -> {
                 val schaden = Random.nextInt(20, 40)
-                println("${name} beschwört aus der Tiefe seines Herzens einen finsteren Magieblitz und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
+                println("$name beschwört aus der Tiefe seines Herzens einen finsteren Magieblitz und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
                 Pair("Finsterer Magieblitz", schaden)
             }
 
@@ -64,16 +64,11 @@ open class Boesewicht(
         println("$name ächzt vor Schmerz und hat jetzt noch $lebenspunkte Lebenspunkte!")
     }
 
-    open fun angreifenHeld(): Int {
-        println("$name bündelt seine dunklen Energien, um den Helden anzugreifen!")
-        return angriff
-    }
-
     override fun toString(): String {
         return "Name: $name, Lebenspunkte: $lebenspunkte, Angriff: $angriff, Magie: $magie, Verteidigung: $verteidigung"
     }
 
-    open fun angreifenHeld(team: List<Held>): Int {
+    open fun angreifen(team: List<Held>): Int {
         TODO("Not yet implemented")
     }
 }

@@ -41,17 +41,17 @@ class Manipulator(
         """.trimMargin()
         )
 
-        val auswahl = readLine()?.toIntOrNull()
+        val auswahl = readln()
         return when (auswahl) {
-            1 -> {
+            "1" -> {
                 println("Die Augen des Gegners werden trüb, als du seinen Geist erfasst und seinen Willen brichst.")
                 magie + Random.nextInt(0, 10)  // Der Schaden sollte sich hier eher auf Magie als auf Angriff beziehen, da es eine Form der geistigen Kontrolle ist.
             }
-            2 -> {
+            "2" -> {
                 println("Die Schatten verdichten sich um deinen Gegner, binden ihn und säen Zweifel in seinem Herzen.")
                 magie + Random.nextInt(0, 5)  // Hier auch Magieschaden.
             }
-            3 -> {
+            "3" -> {
                 println("Mit einem flüchtigen Gestus verzerrst du die Zeit, und der Raum um dich herum scheint sich zu verbiegen.")
                 magie  // Hier könnte man auch einen zusätzlichen Effekt hinzufügen, z.B. eine Chance, den Gegner für einen Zug zu immobilisieren.
             }

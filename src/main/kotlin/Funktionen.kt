@@ -140,7 +140,7 @@ fun soloKampf() {
         println("2. Tritt in den Kampf")
         println("3. Beenden")
         print("Wähle eine Option: ")
-        option = readLine() ?: ""
+        option = readln()
 
         when (option) {
             "1" -> {
@@ -196,9 +196,9 @@ fun Boesewicht.statusAnzeigenFarbig() {
     fun farbig(value: Int, max: Int): String {
         val percentage = value.toDouble() / max.toDouble()
         return when {
-            percentage > 0.6 -> "\u001B[32m$value\u001B[0m"  // Grün
-            percentage > 0.3 -> "\u001B[33m$value\u001B[0m"  // Gelb
-            else -> "\u001B[31m$value\u001B[0m"  // Dunkelrot
+            percentage > 0.6 -> "\u001B[32m$value\u001B[0m"
+            percentage > 0.3 -> "\u001B[33m$value\u001B[0m"
+            else -> "\u001B[31m$value\u001B[0m"
         }
     }
 
