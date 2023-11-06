@@ -1,40 +1,64 @@
-class Manipulator(name: String) : Held(name, "Manipulator") {
+import kotlin.random.Random
+
+class Manipulator(
+    name: String,
+    lebenspunkte: Int,
+    maxLebenspunkte: Int,
+    angriff: Int,
+    magie: Int,
+    verteidigung: Int
+) : Held(
+    name,
+    lebenspunkte,
+    maxLebenspunkte,
+    angriff, magie,
+    verteidigung
+) {
     init {
-        verteidigung = 30
+        val cyan = "\u001B[33m"
+        val reset = "\u001B[0m"
+        println(
+            """
+        |${cyan}$name, geheimnisvoller Manipulator aus den dunklen Ecken Mythrias.
+        |Dein Ruf geht voraus, als Meister der verbotenen Künste, jemand, der die Grenzen des Möglichen ständig neu definiert.
+        |Deine Macht zieht Neider und Bewunderer gleichermaßen an, da du Dinge tust, die andere nur in ihren schlimmsten Alpträumen sehen.${reset}
+        """.trimMargin()
+        )
+        println()
+        Thread.sleep(3000)
     }
 
-    override fun verteidigenLernen() {
-        super.verteidigenLernen()
-        verteidigung += 10
-    }
-    override fun trainieren() {
-        super.trainieren()
-    }
-    fun manipulatorAngriff() {
-        println("$name, tief in der Schlacht, musst du dich entscheiden, welche Technik du nutzen möchtest:")
-        println("1. Schildbumerang")
-        println("2. Umwerfen")
-        println("3. Blocken")
 
-        val auswahl = readln()
+    override fun angreifenBoesewicht(): Int {
+        println(
+            """
+            |Manipulator $name, Bewahrer der dunklen Geheimnisse, mit welcher Kraft wirst du die Realität heute verbiegen?
+            | 1. Gedankenkontrolle - Die Fähigkeit, das Bewusstsein deines Gegners zu infiltrieren und seine Handlungen zu deinem Vorteil zu lenken.
+            | 2. Schattenmanipulation - Ruf die Dunkelheit herbei, um deinen Feind in einem Netz aus Angst und Unsicherheit zu verstricken.
+            | 3. Zeitverzerrung - Spiele mit dem Stoff der Zeit selbst, um deinem Gegner immer einen Schritt voraus zu sein.
+            |
+            | Wähle deinen Angriff (1/2/3):
+        """.trimMargin()
+        )
 
-        val attacke = when (auswahl) {
-            "1" -> "Schildbumerang"
-            "2" -> "Umwerfen"
-            "3" -> "Blocken"
+        val auswahl = readLine()?.toIntOrNull()
+        return when (auswahl) {
+            1 -> {
+                println("Die Augen des Gegners werden trüb, als du seinen Geist erfasst und seinen Willen brichst.")
+                magie + Random.nextInt(0, 10)  // Der Schaden sollte sich hier eher auf Magie als auf Angriff beziehen, da es eine Form der geistigen Kontrolle ist.
+            }
+            2 -> {
+                println("Die Schatten verdichten sich um deinen Gegner, binden ihn und säen Zweifel in seinem Herzen.")
+                magie + Random.nextInt(0, 5)  // Hier auch Magieschaden.
+            }
+            3 -> {
+                println("Mit einem flüchtigen Gestus verzerrst du die Zeit, und der Raum um dich herum scheint sich zu verbiegen.")
+                magie  // Hier könnte man auch einen zusätzlichen Effekt hinzufügen, z.B. eine Chance, den Gegner für einen Zug zu immobilisieren.
+            }
             else -> {
-                println("In der Hitze des Gefechts zögert $name einen Moment, entscheidet sich aber letztlich für den Schildbumerang.")
-                "Schildbumerang"
+                println("$name, als Manipulator weißt du, dass Zurückhaltung manchmal der mächtigste Angriff ist.")
+                0
             }
         }
-
-        val schaden: Number = when (attacke) {
-            "Schildbumerang" -> 20 + verteidigung
-            "Umwerfen" -> 25 + verteidigung
-            "Blocken" -> 15 + verteidigung
-            else -> 0
-        }
-
-        println("Mit einer geschickten Bewegung attackiert $name mit einem $attacke. Die Gegner werden von der Kraft des Angriffs überrascht und erleiden $schaden Schaden.")
     }
 }

@@ -1,43 +1,64 @@
-class Krieger(name: String) : Held(name, "Krieger") {
+import kotlin.random.Random
+
+class Krieger(
+    name: String,
+    lebenspunkte: Int,
+    maxLebenspunkte: Int,
+    angriff: Int,
+    magie: Int,
+    verteidigung: Int
+) : Held(
+    name,
+    lebenspunkte,
+    maxLebenspunkte,
+    angriff, magie,
+    verteidigung
+) {
     init {
-        angriff = 30
+        val ocker = "\u001B[33m"
+        val reset = "\u001B[0m"
+        println(
+            """
+        |${ocker}$name, Nachfahre der legendären Krieger von Mythria, deren Tapferkeit und Stärke in alten Liedern besungen wird.
+        |Deine Vorfahren führten die Armeen von König Alderon in der Schlacht auf den Ebenen von Agador zum Sieg.
+        |Dein Schwert, geschmiedet in den Feuern des Vulkanes Dranor, birgt die Essenz dieser alten Kriege.${reset}
+        """.trimMargin()
+        )
+        println()
+        Thread.sleep(5000)
     }
 
-    override fun mitSchwertKaempfenLernen() {
-        super.mitSchwertKaempfenLernen()
-        angriff += 10
-    }
 
-    override fun trainieren() {
-        super.trainieren()
-    }
+    override fun angreifenBoesewicht(): Int {
+        println(
+            """
+            |Krieger $name, deine Feinde zittern bereits, wenn sie nur deinen Namen hören. Wie wirst du den Bösewicht bezwingen?
+            | 1. Wilder Schwertstreich - Ein Erbe der Schlacht von Agador, mächtig und furchteinflößend.
+            | 2. Unerbittlicher Schildstoß - Eine Technik, die von den Schildwächtern von Mythria gelehrt wurde.
+            | 3. Kriegsbrüllen - Ein Schrei, der den Mut deiner Verbündeten stärkt und Feinde zurückschrecken lässt.
+            |
+            | Wähle deinen Angriff (1/2/3):
+        """.trimMargin()
+        )
 
-    fun kriegerAngriff() {
-        println("$name, tapferer Krieger, wähle deine Kampftechnik:")
-        println("1. Schwertstreich des Drachen")
-        println("2. Sprung des Löwen")
-        println("3. Wirbelwind des Falken")
-
-        val auswahl = readln()
-
-        val attacke = when (auswahl) {
-            "1" -> "Schwertstreich des Drachen"
-            "2" -> "Sprung des Löwen"
-            "3" -> "Wirbelwind des Falken"
+        val auswahl = readln().toIntOrNull()
+        return when (auswahl) {
+            1 -> {
+                println("Du schwingst dein Schwert in einem mächtigen Bogen und entfesselst die Wut deiner Ahnen.")
+                angriff + Random.nextInt(0, 10)
+            }
+            2 -> {
+                println("Mit einem kraftvollen Stoß deines Schildes wirfst du den Gegner zurück und zeigst die Wehrhaftigkeit Mythrias.")
+                angriff + Random.nextInt(0, 5)
+            }
+            3 -> {
+                println("Dein Brüllen hallt über das Schlachtfeld, und Freund wie Feind spüren die Macht deiner Stimme.")
+                angriff
+            }
             else -> {
-                println("Ungewisse Entscheidung. Der Schwertstreich des Drachen wird gewählt.")
-                "Schwertstreich des Drachen"
+                println("$name, selbst ein Krieger von Mythria muss sich auf seine Stärken besinnen. Kein Angriff erfolgt.")
+                0
             }
         }
-
-        val schaden: Int = when (attacke) {
-            "Schwertstreich des Drachen" -> 20 + angriff
-            "Sprung des Löwen" -> 25 + angriff
-            "Wirbelwind des Falken" -> 15 + angriff
-            else -> 0
-        }
-
-        println("$name setzt den $attacke ein und fügt beeindruckende $schaden Schadenspunkte zu.")
     }
-
 }
