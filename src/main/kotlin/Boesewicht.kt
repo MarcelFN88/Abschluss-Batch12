@@ -72,4 +72,8 @@ open class Boesewicht(
     override fun toString(): String {
         return "Name: $name, Lebenspunkte: $lebenspunkte, Angriff: $angriff, Magie: $magie, Verteidigung: $verteidigung"
     }
+
+    open fun angreifenHeld(team: List<Held>): Int {
+        TODO("Not yet implemented")
+    }
 }

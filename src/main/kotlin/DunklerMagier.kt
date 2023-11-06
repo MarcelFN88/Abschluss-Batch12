@@ -11,6 +11,8 @@ class DunklerMagier(
     verteidigung = 40
 ) {
     override val schatten = Schatten()
+    private var rundenZaehler = 0
+    private var fluchRundenZaehler = 0
 
     init {
         println("\nEin kalter Wind weht durch die Gegend, gefolgt von einem dunklen Flüstern. Aus dem Nichts erscheint $name, ein Dunkler Magier, bekannt in Mythria für seine grausamen und dunklen Zauber.")
@@ -19,7 +21,39 @@ class DunklerMagier(
         Thread.sleep(1500)
     }
 
-    override fun angreifenHeld(): Int {
+    private fun fluchAusloesen(team: List<Held>) {
+        println("Dunkler Magier $name spricht einen mächtigen Fluch aus, der die Kräfte des gesamten Helden-Teams schwächt!")
+        team.forEach { held ->
+            held.angriff = (held.angriff * 0.9).toInt()
+            held.verteidigung = (held.verteidigung * 0.9).toInt()
+            held.magie = (held.magie * 0.9).toInt()
+        }
+        fluchRundenZaehler = 3
+    }
+
+    private fun fluchBeenden(team: List<Held>) {
+        println("Der Fluch des Dunklen Magiers verliert seine Wirkung!")
+        team.forEach { held ->
+            held.angriff = (held.angriff / 0.9).toInt()
+            held.verteidigung = (held.verteidigung / 0.9).toInt()
+            held.magie = (held.magie / 0.9).toInt()
+        }
+    }
+
+    override fun angreifenHeld(team: List<Held>): Int {
+        rundenZaehler++
+
+        if (rundenZaehler == 3) {
+            fluchAusloesen(team)
+        }
+
+        if (fluchRundenZaehler > 0) {
+            fluchRundenZaehler--
+            if (fluchRundenZaehler == 0) {
+                fluchBeenden(team)
+            }
+        }
+
         if (lebenspunkte <= maxLebenspunkte * 0.5) {
             println("$name spürt seine Schwäche und ruft die dunklen Mächte des Schattens an seine Seite!")
             schatten.aktivieren()

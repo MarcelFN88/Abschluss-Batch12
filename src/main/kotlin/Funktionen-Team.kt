@@ -1,4 +1,3 @@
-
 import java.io.IOException
 import java.nio.file.Paths
 import javax.sound.sampled.AudioSystem
@@ -72,6 +71,57 @@ fun erstelleTeam(): List<Held> {
     return team
 }
 
+fun lebensbalkenAnzeigen(lebenspunkte: Int, maxLebenspunkte: Int): String {
+    val balkenLaenge = 20
+    val lebenspunkteProzent = lebenspunkte.toDouble() / maxLebenspunkte.toDouble()
+    val gefuellt = (balkenLaenge * lebenspunkteProzent).toInt()
+    val ungefuellt = balkenLaenge - gefuellt
+
+    return "█".repeat(gefuellt) + "░".repeat(ungefuellt)
+}
+
+fun gemeinsameHeldenFarbe(name: String): String {
+    return when (name.split(" ")[0]) {
+        "Myrion", "Thorin" -> "\u001B[31m"
+        "Lyrana", "Aragorn" -> "\u001B[32m"
+        "Tharion", "Frodo" -> "\u001B[33m"
+        "Elara", "Gandalf" -> "\u001B[34m"
+        "Draken", "Legolas" -> "\u001B[35m"
+        "Seraphel", "Galadriel" -> "\u001B[36m"
+        "Varok", "Boromir" -> "\u001B[37m"
+        "Illyria", "Gimli" -> "\u001B[91m"
+        "Orynn", "Eowyn" -> "\u001B[92m"
+        "Azura", "Merlin" -> "\u001B[93m"
+        "Keldorn", "Lancelot" -> "\u001B[94m"
+        "Nylara", "Morgana" -> "\u001B[95m"
+        else -> "\u001B[0m"
+    }
+}
+
+fun Held.statusTeamFarbig() {
+    fun farbig(value: Int, max: Int): String {
+        val percentage = value.toDouble() / max.toDouble()
+        return when {
+            percentage > 0.6 -> "\u001B[32m$value\u001B[0m"
+            percentage > 0.3 -> "\u001B[33m$value\u001B[0m"
+            else -> "\u001B[31m$value\u001B[0m"
+        }
+    }
+
+    val farbigerName = "${gemeinsameHeldenFarbe(name)}$name\u001B[0m"
+
+    println(
+        """
+    |${farbigerName}'s Status:
+    | Lebenspunkte: ${farbig(lebenspunkte, maxLebenspunkte)}/$maxLebenspunkte
+    | Angriff: $angriff
+    | Magie: $magie
+    | Verteidigung: $verteidigung
+    """.trimMargin()
+    )
+}
+
+
 fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
     val beutel = Beutel()
     val boesewicht = when (gegnerName) {
@@ -100,6 +150,7 @@ fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
         for (held in team) {
             held.statusTeamFarbig()
         }
+
         boesewicht.statusAnzeigenFarbig()
 
         for (held in team.filter { it.lebenspunkte > 0 }) {
@@ -163,8 +214,8 @@ fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
                 }
             }
         } else {
-        println("\nDas Schicksal von Mythria bleibt ungewiss, aber euer Mut und Entschlossenheit wird nicht vergessen werden. Ihr habt den Grundstein für zukünftige Helden gelegt.")
-    }
+            println("\nDas Schicksal von Mythria bleibt ungewiss, aber euer Mut und Entschlossenheit wird nicht vergessen werden. Ihr habt den Grundstein für zukünftige Helden gelegt.")
+        }
 
 
         println("\n${boesewicht.name}s Zug!")
@@ -193,163 +244,158 @@ fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
         }
 
         runde++
-    }
 
-}
+        while (team.any { it.lebenspunkte > 0 } && boesewicht.lebenspunkte > 0) {
+            Thread.sleep(1000)
+            println("\nRunde $runde")
 
-fun teamKampf() {
-    println("\u001B[95m\nWillkommen Helden von Mythria!\u001B[0m")
-    println("\u001B[96m\nSeid ihr bereit, euer Schicksal zu erfüllen?\u001B[0m\n")
-    var option: String
-    val team = erstelleTeam()
-    do {
-        println("\nHauptmenü:")
-        println("1. Trainiere dein Team")
-        println("2. Tritt in den Kampf")
-        println("3. Beenden")
-        print("Wähle eine Option: ")
-        option = readln()
-
-        when (option) {
-            "1" -> {
-                do {
-                    for (held in team) {
-                        println("\n${held.name} trainiert jetzt.")
-                        held.trainieren()
-                    }
-                    println("Möchtest du weiter trainieren? (ja/nein)")
-                } while (readln() == "ja")
+            for (held in team) {
+                println(
+                    "${held.name}: ${
+                        lebensbalkenAnzeigen(
+                            held.lebenspunkte,
+                            held.maxLebenspunkte
+                        )
+                    } ${held.lebenspunkte}/${held.maxLebenspunkte}"
+                )
             }
 
-            "2" -> {
-                println("\nGegen welchen Gegner möchtest du kämpfen? (Dunkler Magier/Drache)")
-                val gegnerName = readln() ?: ""
-                rollenspielSimulation(team, gegnerName)
-                for (held in team) {
-                    held.lebenspunkte = held.maxLebenspunkte
+            println(
+                "${boesewicht.name}: ${
+                    lebensbalkenAnzeigen(
+                        boesewicht.lebenspunkte,
+                        boesewicht.maxLebenspunkte
+                    )
+                } ${boesewicht.lebenspunkte}/${boesewicht.maxLebenspunkte}"
+            )
+
+        }
+
+    }
+}
+
+    fun teamKampf() {
+        println("\u001B[95m\nWillkommen Helden von Mythria!\u001B[0m")
+        println("\u001B[96m\nSeid ihr bereit, euer Schicksal zu erfüllen?\u001B[0m\n")
+        var option: String
+        val team = erstelleTeam()
+        do {
+            println("\nHauptmenü:")
+            println("1. Trainiere dein Team")
+            println("2. Tritt in den Kampf")
+            println("3. Beenden")
+            print("Wähle eine Option: ")
+            option = readln()
+
+            when (option) {
+                "1" -> {
+                    do {
+                        for (held in team) {
+                            println("\n${held.name} trainiert jetzt.")
+                            held.trainieren()
+                        }
+                        println("Möchtest du weiter trainieren? (ja/nein)")
+                    } while (readln() == "ja")
                 }
-                println("Möchtest du zum Hauptmenü zurückkehren? (ja/nein)")
-                if (readln() != "ja") {
-                    option = "3"
+
+                "2" -> {
+                    println("\nGegen welchen Gegner möchtest du kämpfen? (Dunkler Magier/Drache)")
+                    val gegnerName = readln() ?: ""
+                    rollenspielSimulation(team, gegnerName)
+                    for (held in team) {
+                        held.lebenspunkte = held.maxLebenspunkte
+                    }
+                    println("Möchtest du zum Hauptmenü zurückkehren? (ja/nein)")
+                    if (readln() != "ja") {
+                        option = "3"
+                    }
                 }
+
+                "3" -> {
+                    println("Danke für eure Tapferkeit, Helden von Mythria. Bis zum nächsten Abenteuer!")
+                }
+
+                else -> {
+                    println("Ungültige Option!")
+                }
+            }
+        } while (option != "3")
+    }
+
+
+    fun typePrint(message: String, delay: Long = 5) {
+        for (char in message) {
+            print(char)
+            Thread.sleep(delay)
+        }
+    }
+
+    fun auswahlMenu() {
+        playMusic("resources/sunrise.wav")
+        typePrint("\u001B[34m\n****************************************")
+        typePrint("\nWillkommen in der Welt von Mythria!")
+        typePrint("\n****************************************\u001B[0m")
+        Thread.sleep(600)
+
+        typePrint("\u001B[94m\nVor langer Zeit war Mythria ein blühendes und friedliches Königreich, behütet von den mächtigen Magiern des Ordens des Lichts.\u001B[0m")
+        Thread.sleep(600)
+        typePrint(
+            "\u001B[95m\nDoch in den dunkelsten Ecken der Welt wurden Pläne geschmiedet.\n" +
+                    "Dunkle Mächte, die einst im Schatten verborgen waren, haben ihre Kräfte gesammelt und sind nun bereit,\n" +
+                    "ihre finstere Präsenz zu offenbaren.\u001B[0m"
+        )
+        Thread.sleep(700)
+
+        typePrint(
+            "\u001B[96m\nEin dunkler Schatten hat sich über das Land gelegt.\n" +
+                    "Böse Kreaturen sind aus den Tiefen aufgestiegen und bedrohen die friedlichen Bewohner von Mythria.\n" +
+                    "Dörfer brennen, und die Schreie der Verzweifelten hallen durch die Nacht.\u001B[0m"
+        )
+        Thread.sleep(700)
+
+        typePrint(
+            "\u001B[34m\nIn dieser Zeit der Not wurde eine Prophezeiung offenbart.\n" +
+                    "Sie sprach von einem Helden, der aus der Dunkelheit auftauchen und das Licht zurück nach Mythria bringen würde.\u001B[0m"
+        )
+        Thread.sleep(800)
+
+        typePrint(
+            "\u001B[94m\nAls mutiger Held von Mythria steht es dir nun zur Wahl, alleine in das Abenteuer zu ziehen oder ein Team mutiger Krieger zusammenzustellen, um gegen das Böse zu kämpfen.\n" +
+                    "Die Hoffnung vieler liegt in deinen Händen.\u001B[0m"
+        )
+        Thread.sleep(700)
+
+        typePrint("\u001B[95m\nWas wird deine Entscheidung sein?\u001B[0m")
+        Thread.sleep(800)
+        typePrint("\u001B[33m\n1. Alleine in den Kampf ziehen und das Böse als einsamer Held bekämpfen.\u001B[0m")
+        typePrint("\u001B[33m\n2. Ein Team von Helden zusammenstellen und gemeinsam gegen die Dunkelheit antreten.\u001B[0m")
+        typePrint("\u001B[33m\n3. Die Welt von Mythria verlassen und ihr Schicksal den Schatten überlassen.\u001B[0m")
+        print("\u001B[33m\nDeine Wahl:\u001B[0m")
+        val auswahl = readln()
+
+        when (auswahl) {
+            "1", "alleine" -> {
+                typePrint("\u001B[36m\nDu hast beschlossen, alleine in den Kampf zu ziehen. Möge das Licht von Mythria dich leiten!\u001B[0m")
+                Thread.sleep(2000)
+                soloKampf()
+            }
+
+            "2", "team" -> {
+                typePrint("\u001B[34m\nGemeinsam seid ihr stark. Baue ein Team auf und stelle dich den dunklen Mächten!\u001B[0m")
+                Thread.sleep(2000)
+                teamKampf()
             }
 
             "3" -> {
-                println("Danke für eure Tapferkeit, Helden von Mythria. Bis zum nächsten Abenteuer!")
+                typePrint("\u001B[36m\nMöge dein Weg dich dorthin führen, wo das Licht von Mythria am hellsten scheint. Auf Wiedersehen!\u001B[0m")
+                System.exit(0)
             }
 
             else -> {
-                println("Ungültige Option!")
+                typePrint("\u001B[35m\nUngültige Option! Bitte triff eine gültige Entscheidung.\u001B[0m")
+                Thread.sleep(1500)
+                auswahlMenu()
             }
         }
-    } while (option != "3")
-}
-
-fun teamHeldenFarben(name: String): String {
-    return when (name.split(" ")[0]) {
-        "Thorin" -> "\u001B[31m"
-        "Aragorn" -> "\u001B[32m"
-        "Frodo" -> "\u001B[33m"
-        "Gandalf" -> "\u001B[34m"
-        "Legolas" -> "\u001B[35m"
-        "Galadriel" -> "\u001B[36m"
-        "Boromir" -> "\u001B[37m"
-        "Gimli" -> "\u001B[91m"
-        "Eowyn" -> "\u001B[92m"
-        "Merlin" -> "\u001B[93m"
-        "Lancelot" -> "\u001B[94m"
-        "Morgana" -> "\u001B[95m"
-        else -> "\u001B[0m"
-    }
-}
-
-fun Held.statusTeamFarbig() {
-    fun farbig(value: Int, max: Int): String {
-        val percentage = value.toDouble() / max.toDouble()
-        return when {
-            percentage > 0.6 -> "\u001B[32m$value\u001B[0m"
-            percentage > 0.3 -> "\u001B[33m$value\u001B[0m"
-            else -> "\u001B[31m$value\u001B[0m"
-        }
     }
 
-    val farbigerName = "${teamHeldenFarben(name)}$name\u001B[0m"
-
-    println(
-        """
-        |${farbigerName}'s Status:
-        | Lebenspunkte: ${farbig(lebenspunkte, maxLebenspunkte)}/$maxLebenspunkte
-        | Angriff: $angriff
-        | Magie: $magie
-        | Verteidigung: $verteidigung
-        """.trimMargin()
-    )
-}
-
-fun typePrint(message: String, delay: Long = 5) {
-    for (char in message) {
-        print(char)
-        Thread.sleep(delay)
-    }
-}
-
-fun auswahlMenu() {
-    playMusic("resources/sunrise.wav")
-    typePrint("\u001B[34m\n****************************************")
-    typePrint("\nWillkommen in der Welt von Mythria!")
-    typePrint("\n****************************************\u001B[0m")
-    Thread.sleep(600)
-
-    typePrint("\u001B[94m\nVor langer Zeit war Mythria ein blühendes und friedliches Königreich, behütet von den mächtigen Magiern des Ordens des Lichts.\u001B[0m")
-    Thread.sleep(600)
-    typePrint("\u001B[95m\nDoch in den dunkelsten Ecken der Welt wurden Pläne geschmiedet.\n" +
-            "Dunkle Mächte, die einst im Schatten verborgen waren, haben ihre Kräfte gesammelt und sind nun bereit,\n" +
-            "ihre finstere Präsenz zu offenbaren.\u001B[0m")
-    Thread.sleep(700)
-
-    typePrint("\u001B[96m\nEin dunkler Schatten hat sich über das Land gelegt.\n" +
-            "Böse Kreaturen sind aus den Tiefen aufgestiegen und bedrohen die friedlichen Bewohner von Mythria.\n" +
-            "Dörfer brennen, und die Schreie der Verzweifelten hallen durch die Nacht.\u001B[0m")
-    Thread.sleep(700)
-
-    typePrint("\u001B[34m\nIn dieser Zeit der Not wurde eine Prophezeiung offenbart.\n" +
-            "Sie sprach von einem Helden, der aus der Dunkelheit auftauchen und das Licht zurück nach Mythria bringen würde.\u001B[0m")
-    Thread.sleep(800)
-
-    typePrint("\u001B[94m\nAls mutiger Held von Mythria steht es dir nun zur Wahl, alleine in das Abenteuer zu ziehen oder ein Team mutiger Krieger zusammenzustellen, um gegen das Böse zu kämpfen.\n" +
-            "Die Hoffnung vieler liegt in deinen Händen.\u001B[0m")
-    Thread.sleep(700)
-
-    typePrint("\u001B[95m\nWas wird deine Entscheidung sein?\u001B[0m")
-    Thread.sleep(800)
-    typePrint("\u001B[33m\n1. Alleine in den Kampf ziehen und das Böse als einsamer Held bekämpfen.\u001B[0m")
-    typePrint("\u001B[33m\n2. Ein Team von Helden zusammenstellen und gemeinsam gegen die Dunkelheit antreten.\u001B[0m")
-    typePrint("\u001B[33m\n3. Die Welt von Mythria verlassen und ihr Schicksal den Schatten überlassen.\u001B[0m")
-    print("\u001B[33m\nDeine Wahl:\u001B[0m")
-    val auswahl = readln()
-
-    when (auswahl) {
-        "1", "alleine" -> {
-            typePrint("\u001B[36m\nDu hast beschlossen, alleine in den Kampf zu ziehen. Möge das Licht von Mythria dich leiten!\u001B[0m")
-            Thread.sleep(2000)
-            soloKampf()
-        }
-
-        "2", "team" -> {
-            typePrint("\u001B[34m\nGemeinsam seid ihr stark. Baue ein Team auf und stelle dich den dunklen Mächten!\u001B[0m")
-            Thread.sleep(2000)
-            teamKampf()
-        }
-
-        "3" -> {
-            typePrint("\u001B[36m\nMöge dein Weg dich dorthin führen, wo das Licht von Mythria am hellsten scheint. Auf Wiedersehen!\u001B[0m")
-            System.exit(0)
-        }
-
-        else -> {
-            typePrint("\u001B[35m\nUngültige Option! Bitte triff eine gültige Entscheidung.\u001B[0m")
-            Thread.sleep(1500)
-            auswahlMenu()
-        }
-    }
-}

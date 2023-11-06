@@ -11,6 +11,7 @@ class Drache(
     verteidigung = 45
 ) {
     override val schatten = Schatten()
+    private var rundenZaehler = 0
 
     init {
         println("\nEin mächtiges Brüllen ertönt aus der Ferne, und der Himmel verdunkelt sich. Ein gewaltiger Drache namens $name erhebt sich am Horizont.")
@@ -19,7 +20,22 @@ class Drache(
         Thread.sleep(1500)
     }
 
-    override fun angreifenHeld(): Int {
+    private fun grossangriff(team: List<Held>) {
+        println("$name entfesselt seinen mächtigen Drachenodem und verursacht bei allen Helden 100 Schadenspunkte!")
+        team.forEach { held ->
+            held.lebenspunkte -= 100
+            if (held.lebenspunkte < 0) held.lebenspunkte = 0
+        }
+    }
+
+    override fun angreifenHeld(team: List<Held>): Int {
+        rundenZaehler++
+
+        if (rundenZaehler % 3 == 0) {
+            grossangriff(team)
+            return 0
+        }
+
         if (lebenspunkte <= maxLebenspunkte * 0.5) {
             println("$name fühlt sich geschwächt und ruft die Kräfte des Schattens zu Hilfe!")
             schatten.aktivieren()
