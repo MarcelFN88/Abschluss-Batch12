@@ -3,83 +3,69 @@ import kotlin.random.Random
 class DunklerMagier(
     name: String
 ) : Boesewicht(
-    name = name,
-    lebenspunkte = 3000,
-    maxLebenspunkte = 3000,
-    angriff = 40,
-    magie = 40,
-    verteidigung = 40
+    name,
+    1800,
+    1800,
+    60,
+    120,
+    60
 ) {
-    override val schatten = Schatten()
-    private var rundenZaehler = 0
-    private var fluchRundenZaehler = 0
+    var magieSchild: Int = 0
+    private var bonusRundenVerteidigung: Int = 0
+    private var urspruenglicheVerteidigung: Int = verteidigung
 
-    init {
-        println("\nEin kalter Wind weht durch die Gegend, gefolgt von einem dunklen Flüstern. Aus dem Nichts erscheint $name, ein Dunkler Magier, bekannt in Mythria für seine grausamen und dunklen Zauber.")
-        Thread.sleep(2000)
-        println("$name hat viele Jahre in den verbotenen Künsten der dunklen Magie verbracht und sucht nun nach der ultimativen Macht, um Mythria zu beherrschen.")
-        Thread.sleep(1500)
+    override var lebenspunkte: Int = maxLebenspunkte
+        set(value) {
+            field = maxOf(0, value)
+        }
+
+    companion object {
+        fun erstelleDunklerMagier(): DunklerMagier {
+            return DunklerMagier("Gandar der Dunkelheit")
+        }
     }
 
-    private fun fluchAusloesen(team: List<Held>) {
-        println("Dunkler Magier $name spricht einen mächtigen Fluch aus, der die Kräfte des gesamten Helden-Teams schwächt!")
+    fun entscheideAktion(normalerAngriff: () -> Unit, spezialAngriff: () -> Unit) {
+        if (Random.nextInt(100) < 80) {
+            normalerAngriff()
+        } else {
+            spezialAngriff()
+        }
+    }
+
+    fun angreifen(team: List<Held>) {
+        entscheideAktion({
+            val ziel = team.random()
+            val angriffe = listOf("Schwarzfeuer" to 90, "Seelenfresser" to 110, "Dunkle Kugel" to 100)
+            val (angriffName, basisSchaden) = angriffe.random()
+            val schaden = berechneSchaden(basisSchaden, this.magie)
+            ziel.lebenspunkte -= schaden
+            println("$name greift $ziel mit $angriffName an und verursacht $schaden Schaden.")
+        }, {
+            spezialAngriff(team)
+        })
+    }
+
+    private fun spezialAngriff(team: List<Held>) {
+        println("$name entfesselt die Kräfte der Dunkelheit über das gesamte Team.")
         team.forEach { held ->
-            held.angriff = (held.angriff * 0.9).toInt()
-            held.verteidigung = (held.verteidigung * 0.9).toInt()
-            held.magie = (held.magie * 0.9).toInt()
-        }
-        fluchRundenZaehler = 3
-    }
-
-    private fun fluchBeenden(team: List<Held>) {
-        println("Der Fluch des Dunklen Magiers verliert seine Wirkung!")
-        team.forEach { held ->
-            held.angriff = (held.angriff / 0.9).toInt()
-            held.verteidigung = (held.verteidigung / 0.9).toInt()
-            held.magie = (held.magie / 0.9).toInt()
+            val schaden = berechneSchaden(130, this.magie)
+            held.lebenspunkte -= schaden
+            println("Es verursacht $schaden Schaden an $held.")
         }
     }
 
-    override fun angreifen(team: List<Held>): Int {
-        rundenZaehler++
 
-        if (rundenZaehler == 3) {
-            fluchAusloesen(team)
+    override fun verteidigen() {
+        if (bonusRundenVerteidigung == 0) {
+            val verteidigungsBonus = 25
+            urspruenglicheVerteidigung = verteidigung
+            verteidigung += verteidigungsBonus
+            magieSchild = 50
+            println("$name erschafft einen magischen Schild. Verteidigung um $verteidigungsBonus erhöht, Schild absorbiert bis zu $magieSchild Schaden.\n")
+            bonusRundenVerteidigung = 3
+        } else {
+            println("$name hat bereits einen magischen Schild und kann die Verteidigung nicht weiter erhöhen.\n")
         }
-
-        if (fluchRundenZaehler > 0) {
-            fluchRundenZaehler--
-            if (fluchRundenZaehler == 0) {
-                fluchBeenden(team)
-            }
-        }
-
-        if (lebenspunkte <= maxLebenspunkte * 0.5) {
-            println("$name spürt seine Schwäche und ruft die dunklen Mächte des Schattens an seine Seite!")
-            schatten.aktivieren()
-        }
-
-        val schattenBonus = schatten.bonusAngriff()
-
-        return when (Random.nextInt(1, 4)) {
-            1 -> {
-                println("Dunkler Magier $name sammelt die Kräfte der Finsternis und entfesselt eine Dunkle Energiekugel!")
-                angriff + magie + schattenBonus
-            }
-
-            2 -> {
-                println("$name murmelt eine finstere Beschwörung und setzt Seelensauger ein, um die Lebensenergie seiner Gegner zu stehlen!")
-                angriff + (magie / 2) + schattenBonus
-            }
-
-            else -> {
-                println("Mit dunklen Worten öffnet $name ein Schattenportal, um Wesen aus den Tiefen der Dunkelheit herbeizurufen!")
-                angriff - 10 + schattenBonus
-            }
-        }
-    }
-
-    override fun toString(): String {
-        return "Dunkler Magier - ${super.toString()}"
     }
 }

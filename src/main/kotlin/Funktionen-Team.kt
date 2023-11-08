@@ -1,402 +1,365 @@
+import java.io.File
 import java.io.IOException
-import java.nio.file.Paths
-import javax.sound.sampled.AudioSystem
-import javax.sound.sampled.LineUnavailableException
-import kotlin.system.exitProcess
+import kotlin.random.Random
 
-fun playMusic(path: String) {
-    try {
-        val audioIn = AudioSystem.getAudioInputStream(Paths.get(path).toFile())
-        val clip = AudioSystem.getClip()
-        clip.open(audioIn)
-        clip.start()
-    } catch (ex: LineUnavailableException) {
-        ex.printStackTrace()
-    } catch (ex: IOException) {
-        ex.printStackTrace()
-    } catch (ex: javax.sound.sampled.UnsupportedAudioFileException) {
-        ex.printStackTrace()
+fun erstelleBoesewicht(): Boesewicht {
+    return if (Random.nextBoolean()) {
+        Drache.erstelleDrache()
+
+    } else {
+        DunklerMagier.erstelleDunklerMagier()
     }
 }
 
-fun erstelleTeam(): List<Held> {
-    val namenMap = mapOf(
-        "Thorin" to listOf("Oakenshield", "Mountain's Son", "Axemaster"),
-        "Aragorn" to listOf("Strider", "King of Gondor", "Elessar"),
-        "Frodo" to listOf("Baggins", "Ringbearer", "Master of the Shire"),
-        "Gandalf" to listOf("the Grey", "White Wizard", "Firebearer"),
-        "Legolas" to listOf("Greenleaf", "Prince of the Wood Elves", "Archer"),
-        "Galadriel" to listOf("Light Queen", "Lady of the Wood", "Star Maiden"),
-        "Boromir" to listOf("Son of Denethor", "Hornblower", "Defender of Gondor"),
-        "Gimli" to listOf("Axe-Wielder", "Dwarf Warrior", "Son of Glóin"),
-        "Eowyn" to listOf("Shieldmaiden", "Lady of Rohan", "White Lady"),
-        "Merlin" to listOf("the Magician", "Enchanter", "Druid Sage"),
-        "Lancelot" to listOf("Knight of the Lake", "Bravest of Knights", "Court Champion"),
-        "Morgana" to listOf("the Enchantress", "Mistress of Magic", "Sorceress")
+fun starteSpielUndTeamMenu(team: List<Held>? = null) {
+    playSound("sunrise.wav")
+    val meinTeam = team ?: listOf(
+        Krieger().apply { heldenErstellen() },
+        Magier().apply { heldenErstellen() },
+        Manipulator().apply { heldenErstellen() }
     )
+    val boesewicht = erstelleBoesewicht()
+    val beutel = Beutel()
 
-    val team = mutableListOf<Held>()
+    var laufen = true
+    val tuerkis = "\u001B[96m"
+    while (laufen) {
+        println(
+            """
+            |Willkommen im Hauptmenü des Teams.
+            |${tuerkis}[1] Trainieren${Held.resetColor}
+            |${tuerkis}[2] In den Kampf ziehen${Held.resetColor}
+            |${tuerkis}[3] Spiel beenden und speichern${Held.resetColor}
+            |Bitte wähle eine Option:
+            """.trimMargin()
+        )
 
-    val kriegerName = namenMap.keys.random()
-    val kriegerNachname = namenMap[kriegerName]?.random() ?: "Unknown"
-    val krieger = Krieger("$kriegerName $kriegerNachname", 1100, 1100, 30, 25, 30)
-    team.add(krieger)
+        when (readln()) {
+            "1" -> {
+                teamTraining(meinTeam)
+            }
 
-    val magierName = namenMap.keys.minus(kriegerName).random()
-    val magierNachname = namenMap[magierName]?.random() ?: "Unknown"
-    val magier = Magier("$magierName $magierNachname", 1000, 1000, 25, 40, 25)
-    team.add(magier)
+            "2" -> {
+                starteRundenbasiertenKampf(meinTeam, boesewicht, beutel)
+            }
 
-    val manipulatorName = namenMap.keys.minus(listOf(kriegerName, magierName).toSet()).random()
-    val manipulatorNachname = namenMap[manipulatorName]?.random() ?: "Unknown"
-    val manipulator = Manipulator("$manipulatorName $manipulatorNachname", 1050, 1050, 28, 35, 28)
-    team.add(manipulator)
+            "3" -> {
+                println("Spiel wird gespeichert und beendet...")
+                speichern(meinTeam)
+                laufen = false
+            }
 
-    println(
-        """
-        |In der alten Taverne von Mythria, einst das Zentrum der magischen Welt, wo Helden aus allen Ländern kamen,
-        |um Ruhm und Reichtum zu suchen, formt sich ein besonderes Team.
-        |
-        |Zwischen dem Klang von Bechern und dem Flüstern alter Geschichten, die von Thorin, dem letzten Überlebenden von 
-        |Mythria's Bergvolk, und Gandalf, einem der alten Wächter von Mythria's heiligen Tempeln, erzählt werden, 
-        |erwacht ein Team von Helden, von dem Legenden bereits zu flüstern wagen.
-        |
-        |Erhebt das Haupt und begrüßt:
-        |  - Krieger: $kriegerName $kriegerNachname
-        |  - Magier: $magierName $magierNachname
-        |  - Manipulator: $manipulatorName $manipulatorNachname
-        |bestimmt, einen unauslöschlichen Abdruck in den Chroniken von Mythria zu hinterlassen!
-    """.trimMargin()
-    )
-
-    return team
-}
-
-fun lebensbalkenAnzeigen(lebenspunkte: Int, maxLebenspunkte: Int): String {
-    val balkenLaenge = 20
-    val lebenspunkteProzent = lebenspunkte.toDouble() / maxLebenspunkte.toDouble()
-    val gefuellt = (balkenLaenge * lebenspunkteProzent).toInt()
-    val ungefuellt = balkenLaenge - gefuellt
-
-    return "█".repeat(gefuellt) + "░".repeat(ungefuellt)
-}
-
-fun gemeinsameHeldenFarbe(name: String): String {
-    return when (name.split(" ")[0]) {
-        "Myrion", "Thorin" -> "\u001B[31m"
-        "Lyrana", "Aragorn" -> "\u001B[32m"
-        "Tharion", "Frodo" -> "\u001B[33m"
-        "Elara", "Gandalf" -> "\u001B[34m"
-        "Draken", "Legolas" -> "\u001B[35m"
-        "Seraphel", "Galadriel" -> "\u001B[36m"
-        "Varok", "Boromir" -> "\u001B[37m"
-        "Illyria", "Gimli" -> "\u001B[91m"
-        "Orynn", "Eowyn" -> "\u001B[92m"
-        "Azura", "Merlin" -> "\u001B[93m"
-        "Keldorn", "Lancelot" -> "\u001B[94m"
-        "Nylara", "Morgana" -> "\u001B[95m"
-        else -> "\u001B[0m"
-    }
-}
-
-fun Held.statusTeamFarbig() {
-    fun farbig(value: Int, max: Int): String {
-        val percentage = value.toDouble() / max.toDouble()
-        return when {
-            percentage > 0.6 -> "\u001B[32m$value\u001B[0m"
-            percentage > 0.3 -> "\u001B[33m$value\u001B[0m"
-            else -> "\u001B[31m$value\u001B[0m"
+            else -> println("Ungültige Eingabe, bitte versuchen Sie es erneut.")
         }
     }
+}
 
-    val farbigerName = "${gemeinsameHeldenFarbe(name)}$name\u001B[0m"
+fun teamTraining(team: List<Held>) {
+    val blau = "\u001B[34m"
+    val reset = "\u001B[0m"
 
-    println(
-        """
-    |${farbigerName}'s Status:
-    | Lebenspunkte: ${farbig(lebenspunkte, maxLebenspunkte)}/$maxLebenspunkte
-    | Angriff: $angriff
-    | Magie: $magie
-    | Verteidigung: $verteidigung
-    """.trimMargin()
-    )
+    println("Wen möchtest du trainieren?")
+    team.forEachIndexed { index, held ->
+        val heldenRolle = when (held) {
+            is Krieger -> "Krieger"
+            is Magier -> "Magier"
+            is Manipulator -> "Manipulator"
+            else -> "Unbekannt"
+        }
+        println("$blau${index + 1}. ${held.name} $reset($heldenRolle)")
+    }
+    println("Gib die Nummer des Helden ein, den du trainieren möchtest:")
+
+    val auswahl = readln().toIntOrNull()
+    if (auswahl == null || auswahl !in 1..team.size) {
+        println("Ungültige Auswahl. Bitte gib eine Zahl zwischen 1 und ${team.size} ein.")
+        return
+    }
+
+    val zuTrainierenderHeld = team[auswahl - 1]
+    zuTrainierenderHeld.training()
+}
+
+fun speichern(team: List<Held>) {
+    val teamNamen = team.joinToString("_") { it.name.filter { char -> char.isLetterOrDigit() } }
+    println("Speichern des Spielstands. Drücken Sie Enter, um als '${teamNamen}.txt' zu speichern oder geben Sie einen neuen Namen ein:")
+    val eingabe = readln().trim()
+    val dateiName = if (eingabe.isBlank()) "${teamNamen}.txt" else "$eingabe.txt"
+
+    try {
+        File(dateiName).bufferedWriter().use { out ->
+            team.forEach { held ->
+                val typ = when (held) {
+                    is Krieger -> "Krieger"
+                    is Magier -> "Magier"
+                    is Manipulator -> "Manipulator"
+                    else -> throw IllegalArgumentException("Unbekannter Heldentyp")
+                }
+                val daten =
+                    "$typ,${held.name},${held.lebenspunkte},${held.maxLebenspunkte},${held.angriff},${held.magie},${held.verteidigung}"
+                out.write(daten)
+                out.newLine()
+            }
+        }
+        println("Speichern erfolgreich: Daten wurden in '$dateiName' gespeichert.")
+    } catch (e: IOException) {
+        println("Ein Fehler ist aufgetreten beim Speichern der Datei '$dateiName': ${e.message}")
+    }
 }
 
 
-fun rollenspielSimulation(team: List<Held>, gegnerName: String) {
-    val beutel = Beutel()
-    val boesewicht = when (gegnerName) {
-        "Dunkler Magier" -> DunklerMagier("Dunkler Magier von Mythria, einst ein Schüler der größten Magierschule, der vom Pfad des Lichts abkam")
-        "Drache" -> Drache("Feuerspeiender Drache aus den Tiefen von Mythria's Bergen")
-        else -> Boesewicht("Unbekannter Feind")
+fun laden(): List<Held>? {
+    val spielstandOrdner = File(".")
+    val spielstaende = spielstandOrdner.listFiles { file -> file.isFile && file.name.endsWith(".txt") }
+    if (spielstaende == null || spielstaende.isEmpty()) {
+        println("Keine Spielstände gefunden.")
+        return null
     }
 
-    println(
-        """
-        |Auf einem vergessenen Schlachtfeld von Mythria, wo einst der endgültige Krieg zwischen Gut und Böse tobte, 
-        |trifft unser Team von Helden auf einen mächtigen Gegner.
-        |
-        |Das Team wurde in dieses alte Reich gezogen und steht nun dem ${boesewicht.name} gegenüber!
-        |Der Wind weht kalt über die Ruinen, und die Luft ist mit der Magie und Spannung von Mythria geladen.
-        |Es ist Zeit zu kämpfen!
-    """.trimMargin()
-    )
+    println("Verfügbare Spielstände:")
+    spielstaende.forEachIndexed { index, file ->
+        println("${index + 1}. ${file.name}")
+    }
+
+    println("Bitte wählen Sie die Nummer des zu ladenden Spielstands:")
+    val eingabe = readln().toIntOrNull() ?: return null
+    if (eingabe in 1..spielstaende.size) {
+        val team = mutableListOf<Held>()
+        val lines = File(spielstaende[eingabe - 1].name).readLines()
+        lines.forEach { line ->
+            val daten = line.split(",")
+            if (daten.size >= 7) {
+                val held = when (val typ = daten[0]) {
+                    "Krieger" -> Krieger()
+                    "Magier" -> Magier()
+                    "Manipulator" -> Manipulator()
+                    else -> throw IllegalArgumentException("Unbekannter Heldentyp: $typ")
+                }
+                held.name = daten[1]
+                held.lebenspunkte = daten[2].toInt()
+                held.maxLebenspunkte = daten[3].toInt()
+                held.angriff = daten[4].toInt()
+                held.magie = daten[5].toInt()
+                held.verteidigung = daten[6].toInt()
+                team.add(held)
+            }
+        }
+        if (team.isNotEmpty()) {
+            return team
+        }
+        println("Spielstand ist leer oder beschädigt.")
+        return null
+    } else {
+        println("Ungültige Auswahl.")
+        return null
+    }
+}
+
+fun spielstaendeLoeschen() {
+    val spielstandOrdner = File(".")
+    val spielstaende = spielstandOrdner.listFiles { file -> file.isFile && file.name.endsWith(".txt") }
+    if (spielstaende.isNullOrEmpty()) {
+        println("Keine Spielstände zum Löschen gefunden.")
+        return
+    }
+
+    println("Verfügbare Spielstände zum Löschen:")
+    spielstaende.forEachIndexed { index, file ->
+        println("${index + 1}. ${file.name}")
+    }
+
+    println("Bitte geben Sie die Nummer des zu löschenden Spielstands ein oder '0', um abzubrechen:")
+    val eingabe = readln().toIntOrNull() ?: return
+    if (eingabe == 0) {
+        println("Löschvorgang abgebrochen.")
+        return
+    }
+    if (eingabe in 1..spielstaende.size) {
+        val zuLoeschendeDatei = spielstaende[eingabe - 1]
+        if (zuLoeschendeDatei.delete()) {
+            println("Spielstand '${zuLoeschendeDatei.name}' wurde gelöscht.")
+        } else {
+            println("Spielstand '${zuLoeschendeDatei.name}' konnte nicht gelöscht werden.")
+        }
+    } else {
+        println("Ungültige Auswahl.")
+    }
+
+}
+
+fun hauptMenuTeam() {
+
+    println("Willkommen im Abenteuerspiel!")
+    println("Möchtest Du ein neues Spiel starten? dann tippe “start“")
+    println("Ein gespeichertes Spiel laden? Dann tippe “laden“")
+    println("Einen Spielstand löschen? Dann tippe “löschen“")
+
+    when (readln().trim().lowercase()) {
+        "start" -> {
+            starteSpielUndTeamMenu()
+        }
+
+        "laden" -> {
+            val geladenesTeam = laden()
+            if (geladenesTeam != null) {
+                starteSpielUndTeamMenu(geladenesTeam)
+            } else {
+                println("Das Laden des Spielstands ist fehlgeschlagen.")
+                hauptMenuTeam()
+            }
+        }
+
+        "löschen" -> {
+            spielstaendeLoeschen()
+            hauptMenuTeam()
+            return
+        }
+
+        else -> {
+            println("Ungültige Eingabe. Bitte versuche es erneut.")
+            hauptMenuTeam()
+            return
+        }
+    }
+}
+
+fun starteRundenbasiertenKampf(team: List<Held>, boesewicht: Boesewicht, beutel: Beutel) {
+    println("Initialisiere Kampf...")
+
+    team.forEach { held -> held.lebenspunkte = held.maxLebenspunkte }
+    boesewicht.lebenspunkte = boesewicht.maxLebenspunkte
+
+    println("Teamlebenspunkte: ${team.sumOf { it.lebenspunkte }}")
+    println("Boesewichtlebenspunkte: ${boesewicht.lebenspunkte}")
+
+    val gegner = if (Random.nextBoolean()) Drache("Eragon") else DunklerMagier("Varok")
+    rundenbasierterKampfTeam(team, gegner, beutel)
+}
+
+fun rundenbasierterKampfTeam(team: List<Held>, boesewicht: Boesewicht, beutel: Beutel) {
+    println("Das Team hat bisher ${Held.siege} mal gewonnen und ${Held.niederlagen} mal verloren.\n")
+    println("Debug: Teamlebenspunkte zu Beginn des Kampfes: ${team.sumOf { it.lebenspunkte }}")
+    println("Debug: Bösewichtlebenspunkte zu Beginn des Kampfes: ${boesewicht.lebenspunkte}")
 
     var runde = 1
-    var heldenLebendig: Boolean
-    while (team.any { it.lebenspunkte > 0 } && boesewicht.lebenspunkte > 0) {
-        Thread.sleep(1000)
-        println("\nRunde $runde")
+    var schattenhelferAktiv = false
+    var schattenhelferRundenZaehler = 0
+    val schattenhelfer = Schattenhelfer()
 
-        for (held in team) {
-            held.statusTeamFarbig()
+
+    while (team.any { it.lebenspunkte > 0 } && boesewicht.lebenspunkte > 0) {
+        team.forEach { it.aktualisiereVerteidigung(); it.rundenUpdate() }
+        boesewicht.rundenUpdate()
+
+        println("Runde $runde!\n")
+
+        team.forEach { held ->
+            val lebenspunkteFarbe = Boesewicht.lebenspunkteFarbe(held.lebenspunkte, held.maxLebenspunkte)
+            println("${Held.nameColor}${held.name}${Held.resetColor} - Lebenspunkte: $lebenspunkteFarbe${held.lebenspunkte}/${held.maxLebenspunkte}${Held.resetColor}")
         }
 
-        boesewicht.statusAnzeigenFarbig()
+        val boesewichtLebenspunkteFarbe =
+            Boesewicht.lebenspunkteFarbe(boesewicht.lebenspunkte, boesewicht.maxLebenspunkte)
+        println("${Boesewicht.nameColor}${boesewicht.name}${Boesewicht.resetColor} - Lebenspunkte: $boesewichtLebenspunkteFarbe${boesewicht.lebenspunkte}/${boesewicht.maxLebenspunkte}${Boesewicht.resetColor}\n")
 
-        for (held in team.filter { it.lebenspunkte > 0 }) {
-            println("\nDein Zug, ${held.name}. Wähle deine Aktion: (angreifen/blocken/beutel)")
-            val aktion = readln()
+        for (held in team) {
+            if (held.lebenspunkte > 0) {
+                println("Was soll ${held.name} tun?")
+                println("1. Angreifen")
+                println("2. Verteidigen")
+                println("3. Beutel benutzen\n")
+                print("Deine Wahl: \n")
+                val aktion = readln()
 
-            when (aktion) {
-                "angreifen" -> {
-                    val schaden = held.angreifenBoesewicht()
-                    if (!boesewicht.blocken()) {
-                        boesewicht.erhalteSchaden(schaden)
+                when (aktion) {
+                    "1" -> {
+                        held.angreifen(boesewicht)
+                    }
+
+                    "2" -> {
+                        held.verteidigen()
+                    }
+
+                    "3" -> {
+                        beutel.zeigeInventar()
+                        beutel.waehleUndBenutze(held)
+                    }
+
+                    else -> println("Das ist keine gültige Auswahl.")
+                }
+            }
+        }
+
+        if (boesewicht.lebenspunkte > 0) {
+            if (boesewicht.laehmung) {
+                println("${boesewicht.name} ist gelähmt und kann diesen Zug nicht agieren!")
+                boesewicht.laehmung = false
+            } else {
+                if (boesewicht.lebenspunkte.toDouble() / boesewicht.maxLebenspunkte <= 0.4 && !schattenhelferAktiv) {
+                    println("${boesewicht.name} ruft einen Schattenhelfer zur Hilfe!")
+                    schattenhelferAktiv = true
+                    schattenhelferRundenZaehler = 3
+                }
+
+            if (boesewicht.laehmung) {
+                println("${boesewicht.name} ist gelähmt und kann diesen Zug nicht agieren!")
+                boesewicht.laehmung = false
+            }
+
+                if (schattenhelferAktiv) {
+                    schattenhelfer.angreifen(team)
+
+                    schattenhelferRundenZaehler--
+                    if (schattenhelferRundenZaehler <= 0) {
+                        schattenhelferAktiv = false
                     }
                 }
 
-                "blocken" -> {
-                    println("${held.name} bereitet sich darauf vor, den nächsten Angriff zu blocken!")
-                }
-
-                "beutel" -> {
-                    beutel.zeigeInhalt()
-                    held.benutzeItem(beutel)
-                }
-
-                else -> {
-                    println("Ungültige Wahl!")
+                val boesewichtAktion = Random.nextInt(5)
+                if (boesewichtAktion in 0..3) {
+                    boesewicht.angreifen(team.random())
+                } else {
+                    boesewicht.verteidigen()
                 }
             }
-
-            if (boesewicht.lebenspunkte <= 0) break
         }
 
         if (boesewicht.lebenspunkte <= 0) {
-            println("\nDie Legenden von Mythria werden von eurem Mut sprechen, Helden von Mythria!")
-            println("\nJede Erzählung in der Taverne wird eure Geschichte feiern!")
-
+            Held.siege++
+            println("${Boesewicht.nameColor}${boesewicht.name}${Boesewicht.resetColor} wurde besiegt!")
             for (held in team) {
-                val itemHinzugefuegt = beutel.fuegeItemHinzu("Heiltrank", 1)
-                if (itemHinzugefuegt) {
-                    println("${held.name} hat einen Heiltrank zum Beutel hinzugefügt!")
+                if (Random.nextBoolean()) {
+                    println("Als Belohnung für den Sieg erhält ${held.name} einen Heiltrank!")
+                    beutel.fuegeHinzu("Heiltrank")
                 } else {
-                    println("${held.name} konnte keinen Heiltrank hinzufügen!")
+                    println("Als Belohnung für den Sieg erhält ${held.name} Vitamine!")
+                    beutel.fuegeHinzu("Vitamine")
                 }
+                held.lebenspunkte = held.maxLebenspunkte
             }
 
-            for (held in team.filter { it.lebenspunkte > 0 }) {
-                when ((1..3).random()) {
-                    1 -> {
-                        held.angriff += 5
-                        println("${held.name}s Angriff wurde um 5 Punkte erhöht!")
-                    }
-
-                    2 -> {
-                        held.magie += 5
-                        println("${held.name}s Magie wurde um 5 Punkte erhöht!")
-                    }
-
-                    3 -> {
-                        held.verteidigung += 5
-                        println("${held.name}s Verteidigung wurde um 5 Punkte erhöht!")
-                    }
-                }
-            }
-        } else {
-            println("\nDas Schicksal von Mythria bleibt ungewiss, aber euer Mut und Entschlossenheit wird nicht vergessen werden. Ihr habt den Grundstein für zukünftige Helden gelegt.")
+        } else if (team.all { it.lebenspunkte <= 0 }) {
+            Held.niederlagen++
+            println("Das Team wurde besiegt!")
+            team.forEach { it.lebenspunkte = it.maxLebenspunkte }
         }
 
 
-        println("\n${boesewicht.name}s Zug!")
-        val schaden = boesewicht.angreifen().second
 
-        if (boesewicht is DunklerMagier || boesewicht is Drache) {
-            boesewicht.rufeSchatten()
-            if (boesewicht.schatten.aktiv) {
-                boesewicht.schatten.schattenAngriff(team)
-            }
-        }
-
-        for (held in team) {
-            if (!held.blocken()) {
-                held.lebenspunkte -= schaden
-                if (held.lebenspunkte <= 0) {
-                    println("\n${held.name} ist gefallen!")
-                }
-            }
-        }
-
-        heldenLebendig = team.any { it.lebenspunkte > 0 }
-        if (!heldenLebendig) {
-            println("\nLeider hat der ${boesewicht.name} gewonnen. Versucht es erneut, Team!")
+    if (boesewicht.lebenspunkte <= 0 || team.all { it.lebenspunkte <= 0 }) {
             break
         }
 
         runde++
-
-        while (team.any { it.lebenspunkte > 0 } && boesewicht.lebenspunkte > 0) {
-            Thread.sleep(1000)
-            println("\nRunde $runde")
-
-            for (held in team) {
-                println(
-                    "${held.name}: ${
-                        lebensbalkenAnzeigen(
-                            held.lebenspunkte,
-                            held.maxLebenspunkte
-                        )
-                    } ${held.lebenspunkte}/${held.maxLebenspunkte}"
-                )
-            }
-
-            println(
-                "${boesewicht.name}: ${
-                    lebensbalkenAnzeigen(
-                        boesewicht.lebenspunkte,
-                        boesewicht.maxLebenspunkte
-                    )
-                } ${boesewicht.lebenspunkte}/${boesewicht.maxLebenspunkte}"
-            )
-
-        }
-
     }
+
+    team.forEach { it.lebenspunkte = it.maxLebenspunkte }
+    println("Der Kampf ist vorbei. Das Team hat jetzt ${Held.siege} Siege und ${Held.niederlagen} Niederlagen.\n\n\n")
+    boesewicht.maxLebenspunkte = (boesewicht.maxLebenspunkte * 1.1).toInt()
+    boesewicht.angriff = (boesewicht.angriff * 1.1).toInt()
+    boesewicht.verteidigung = (boesewicht.verteidigung * 1.1).toInt()
+
+    println("${Boesewicht.nameColor}${boesewicht.name}${Boesewicht.resetColor} wird stärker und kommt zurück für eine Revanche!")
+
 }
-
-    fun teamKampf() {
-        println("\u001B[95m\nWillkommen Helden von Mythria!\u001B[0m")
-        println("\u001B[96m\nSeid ihr bereit, euer Schicksal zu erfüllen?\u001B[0m\n")
-        var option: String
-        val team = erstelleTeam()
-        do {
-            println("\nHauptmenü:")
-            println("1. Trainiere dein Team")
-            println("2. Tritt in den Kampf")
-            println("3. Beenden")
-            print("Wähle eine Option: ")
-            option = readln()
-
-            when (option) {
-                "1" -> {
-                    do {
-                        for (held in team) {
-                            println("\n${held.name} trainiert jetzt.")
-                            held.trainieren()
-                        }
-                        println("Möchtest du weiter trainieren? (ja/nein)")
-                    } while (readln() == "ja")
-                }
-
-                "2" -> {
-                    println("\nGegen welchen Gegner möchtest du kämpfen? (Dunkler Magier/Drache)")
-                    val gegnerName = readln()
-                    rollenspielSimulation(team, gegnerName)
-                    for (held in team) {
-                        held.lebenspunkte = held.maxLebenspunkte
-                    }
-                    println("Möchtest du zum Hauptmenü zurückkehren? (ja/nein)")
-                    if (readln() != "ja") {
-                        option = "3"
-                    }
-                }
-
-                "3" -> {
-                    println("Danke für eure Tapferkeit, Helden von Mythria. Bis zum nächsten Abenteuer!")
-                }
-
-                else -> {
-                    println("Ungültige Option!")
-                }
-            }
-        } while (option != "3")
-    }
-
-
-    fun typePrint(message: String, delay: Long = 5) {
-        for (char in message) {
-            print(char)
-            Thread.sleep(delay)
-        }
-    }
-
-    fun auswahlMenu() {
-        playMusic("resources/sunrise.wav")
-        typePrint("\u001B[34m\n****************************************")
-        typePrint("\nWillkommen in der Welt von Mythria!")
-        typePrint("\n****************************************\u001B[0m")
-        Thread.sleep(600)
-
-        typePrint("\u001B[94m\nVor langer Zeit war Mythria ein blühendes und friedliches Königreich, behütet von den mächtigen Magiern des Ordens des Lichts.\u001B[0m")
-        Thread.sleep(600)
-        typePrint(
-            "\u001B[95m\nDoch in den dunkelsten Ecken der Welt wurden Pläne geschmiedet.\n" +
-                    "Dunkle Mächte, die einst im Schatten verborgen waren, haben ihre Kräfte gesammelt und sind nun bereit,\n" +
-                    "ihre finstere Präsenz zu offenbaren.\u001B[0m"
-        )
-        Thread.sleep(700)
-
-        typePrint(
-            "\u001B[96m\nEin dunkler Schatten hat sich über das Land gelegt.\n" +
-                    "Böse Kreaturen sind aus den Tiefen aufgestiegen und bedrohen die friedlichen Bewohner von Mythria.\n" +
-                    "Dörfer brennen, und die Schreie der Verzweifelten hallen durch die Nacht.\u001B[0m"
-        )
-        Thread.sleep(700)
-
-        typePrint(
-            "\u001B[34m\nIn dieser Zeit der Not wurde eine Prophezeiung offenbart.\n" +
-                    "Sie sprach von einem Helden, der aus der Dunkelheit auftauchen und das Licht zurück nach Mythria bringen würde.\u001B[0m"
-        )
-        Thread.sleep(800)
-
-        typePrint(
-            "\u001B[94m\nAls mutiger Held von Mythria steht es dir nun zur Wahl, alleine in das Abenteuer zu ziehen oder ein Team mutiger Krieger zusammenzustellen, um gegen das Böse zu kämpfen.\n" +
-                    "Die Hoffnung vieler liegt in deinen Händen.\u001B[0m"
-        )
-        Thread.sleep(700)
-
-        typePrint("\u001B[95m\nWas wird deine Entscheidung sein?\u001B[0m")
-        Thread.sleep(800)
-        typePrint("\u001B[33m\n1. Alleine in den Kampf ziehen und das Böse als einsamer Held bekämpfen.\u001B[0m")
-        typePrint("\u001B[33m\n2. Ein Team von Helden zusammenstellen und gemeinsam gegen die Dunkelheit antreten.\u001B[0m")
-        typePrint("\u001B[33m\n3. Die Welt von Mythria verlassen und ihr Schicksal den Schatten überlassen.\u001B[0m")
-        print("\u001B[33m\nDeine Wahl:\u001B[0m")
-        val auswahl = readln()
-
-        when (auswahl) {
-            "1", "alleine" -> {
-                typePrint("\u001B[36m\nDu hast beschlossen, alleine in den Kampf zu ziehen. Möge das Licht von Mythria dich leiten!\u001B[0m")
-                Thread.sleep(2000)
-                soloKampf()
-            }
-
-            "2", "team" -> {
-                typePrint("\u001B[34m\nGemeinsam seid ihr stark. Baue ein Team auf und stelle dich den dunklen Mächten!\u001B[0m")
-                Thread.sleep(2000)
-                teamKampf()
-            }
-
-            "3" -> {
-                typePrint("\u001B[36m\nMöge dein Weg dich dorthin führen, wo das Licht von Mythria am hellsten scheint. Auf Wiedersehen!\u001B[0m")
-                exitProcess(0)
-            }
-
-            else -> {
-                typePrint("\u001B[35m\nUngültige Option! Bitte triff eine gültige Entscheidung.\u001B[0m")
-                Thread.sleep(1500)
-                auswahlMenu()
-            }
-        }
-    }
 

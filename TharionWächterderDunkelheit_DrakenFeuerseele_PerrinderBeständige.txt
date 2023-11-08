@@ -1,0 +1,3 @@
+Krieger,Tharion Wächter der Dunkelheit,2000,2000,75,60,60
+Magier,Draken Feuerseele,2000,2000,60,75,60
+Manipulator,Perrin der Beständige,2000,2000,78,65,65

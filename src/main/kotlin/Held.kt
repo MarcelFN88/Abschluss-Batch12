@@ -1,234 +1,307 @@
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
-import kotlin.random.Random
+import java.io.IOException
+import java.io.File
+
 
 open class Held(
-    val name: String,
+    var name: String,
     var lebenspunkte: Int,
-    val maxLebenspunkte: Int,
+    var maxLebenspunkte: Int,
     var angriff: Int,
     var magie: Int,
     var verteidigung: Int
 ) {
 
-    fun trainieren() {
-        println(
-            """
-        |$name, an welchem mystischen Ort möchtest du heute trainieren und deine Fähigkeiten meistern?
-        | 1. Tempel der Schwertmeister (Angriff)
-        | 2. Verzauberter Wald der Zauberer (Magie)
-        | 3. Festung der Schildwächter (Verteidigung)
-        |Treffe deine Wahl, oh Held (1/2/3):
-    """.trimMargin()
-        )
+    open var urspruenglicheVerteidigung = verteidigung
+    open var bonusRundenVerteidigung = 0
 
-        val erhoehung = Random.nextInt(5, 11)
 
-        when (readln()) {
-            "1" -> {
-                this.angriff += erhoehung
-                println("Im Tempel der Schwertmeister hast du wertvolles Wissen erlangt! Angriff erhöht um \u001B[32m$erhoehung\u001B[0m Punkte.")
-            }
-
-            "2" -> {
-                this.magie += erhoehung
-                println("Im verzauberten Wald hast du mit alten Magiern gesprochen! Magie erhöht um \u001B[32m$erhoehung\u001B[0m Punkte.")
-            }
-
-            "3" -> {
-                this.verteidigung += erhoehung
-                println("In der Festung der Schildwächter hast du gelernt, jeden Schlag abzuwehren! Verteidigung erhöht um \u001B[32m$erhoehung\u001B[0m Punkte.")
-            }
-
-            else -> println("Ein unbekannter Pfad... Vielleicht ein andermal.")
+    open fun temporaereVerteidigungErhoehen(runden: Int) {
+        if (bonusRundenVerteidigung == 0) {
+            urspruenglicheVerteidigung = verteidigung
+            verteidigung = (verteidigung * 1.2).toInt()
+            println("Der Effekt der Vitamine beginnt! Verteidigung um 20% erhöht.")
         }
-
-        println(
-            """
-        |----------------------------------
-        |$name's aktuelle Statistiken:
-        | Angriff: $angriff
-        | Magie: $magie
-        | Verteidigung: $verteidigung
-        | Lebenspunkte: $lebenspunkte / $maxLebenspunkte
-        |----------------------------------
-    """.trimMargin()
-        )
-        println()
+        bonusRundenVerteidigung = runden
     }
 
-    open fun angreifenBoesewicht(): Int {
-        println(
-            """
-        |In der Hitze des Gefechts, umgeben von Feinden und Verbündeten, liegt es an dir, deinen nächsten Zug zu wählen.
-        | 
-        | 1. Entfessle einen wuchtigen Schlag, der die Erde erzittern lässt.
-        | 2. Kanalisiere die Mächte der Magie und schleudere einen elektrisierenden Magieblitz gegen deinen Widersacher.
-        | 3. Lass dein Schwert durch die Luft sausen und führe einen tödlichen Schwertstreich aus.
-        |
-        | Held, welchen Pfad wählst du in dieser kritischen Stunde? (1/2/3):
-    """.trimMargin()
-        )
-        val schaden = Random.nextInt(20, 41)
-
-        when (readln()) {
-            "1" -> {
-                println("Mit einem donnernden Knall und einer Stärke, die Legenden würdig ist, trifft dein Schlag den Gegner unvorbereitet!")
-            }
-
-            "2" -> {
-                println("Während du alte Sprüche murmelst, sammeln sich um dich herum elektrische Energien, die schließlich in einem blendenden Blitz auf deinen Gegner zusteuern!")
-            }
-
-            "3" -> {
-                println("Das leise Zischen deines Schwertes ist das letzte, was dein Gegner hört, bevor er die scharfe Klinge zu spüren bekommt!")
-            }
-
-            else -> {
-                println("Die Schlacht ist chaotisch und in einem Moment der Unsicherheit gelingt es dir nicht, einen effektiven Angriff auszuführen!")
-                return 0
+    open fun aktualisiereVerteidigung() {
+        if (bonusRundenVerteidigung > 0) {
+            bonusRundenVerteidigung--
+            if (bonusRundenVerteidigung == 0) {
+                verteidigung = urspruenglicheVerteidigung
+                println("Der Effekt der Vitamine ist vorbei. Verteidigung wird zurückgesetzt.")
             }
         }
-
-        println("Die Macht deines Angriffs hat \u001B[31m$schaden\u001B[0m Schadenspunkte verursacht!")
-        return schaden
     }
 
-    fun blocken(): Boolean {
-        println(
-            """
-        |Inmitten des wilden Getümmels der Schlacht spürst du, $name, die drohende Gefahr eines bevorstehenden Angriffs.
-        |Entschlossen, dich zu verteidigen, bereitest du dich vor, einen scheinbar tödlichen Schlag abzuwehren.
-        |
-        | 1. Erhebe deinen Schild und lasse den Angriff daran zerschellen.
-        | 2. Nutze deine magische Aura, um dich in einen schützenden Kokon zu hüllen.
-        | 3. Weiche mit einer geschmeidigen Bewegung dem Angriff aus.
-        |
-        | Held, wie wirst du dich schützen, wenn das Unheil herabkommt? (1/2/3):
-    """.trimMargin()
-        )
+    fun speichern() {
+        println("Speichern des Spielstands. Drücken Sie Enter, um als '$name.txt' zu speichern oder geben Sie einen neuen Namen ein:")
+        val eingabe = readln().trim()
+        val dateiName = if (eingabe.isBlank()) "$name.txt" else "$eingabe.txt"
 
-        when (readln()) {
-            "1" -> {
-                println("Mit einem lauten Krachen trifft der feindliche Angriff auf deinen Schild, doch du stehst fest wie ein Fels in der Brandung!")
+        try {
+            val daten = "$name,$lebenspunkte,$maxLebenspunkte,$angriff,$magie,$verteidigung"
+            File(dateiName).writeText(daten)
+            println("Speichern erfolgreich: Daten wurden in '$dateiName' gespeichert.")
+        } catch (e: IOException) {
+            println("Ein Fehler ist aufgetreten beim Speichern der Datei '$dateiName': ${e.message}")
+        }
+    }
+
+    companion object {
+        val nameColor = "\u001B[34m"
+        val valueColor = "\u001B[32m"
+        val labelColor = "\u001B[35m"
+        val resetColor = "\u001B[0m"
+        const val greenColor = "\u001B[32m"
+        const val yellowColor = "\u001B[33m"
+        const val redColor = "\u001B[31m"
+        var siege = 0
+        var niederlagen = 0
+
+        fun laden(): Held? {
+            val spielstandOrdner = File(".")
+            val spielstaende = spielstandOrdner.listFiles { file -> file.isFile && file.name.endsWith(".txt") }
+            if (spielstaende == null || spielstaende.isEmpty()) {
+                println("Keine Spielstände gefunden.")
+                return null
             }
 
-            "2" -> {
-                println("Ein schimmerndes Leuchten umgibt dich, während du von einer schützenden magischen Barriere umhüllt wirst. Der Angriff kann dir nichts anhaben!")
+            println("Verfügbare Spielstände:")
+            spielstaende.forEachIndexed { index, file ->
+                println("${index + 1}. ${file.name}")
             }
 
-            "3" -> {
-                println("Wie ein Schatten verschwindest du aus dem Blickfeld deines Gegners und tauchst an einem sicheren Ort wieder auf. Der Angriff hat dich verfehlt!")
-            }
-
-            else -> {
-                println("Ein unvorhergesehener Fehler in deiner Verteidigung lässt dich verwundbar zurück. Hoffentlich wird das nicht dein Verhängnis!")
-                return false
+            println("Bitte wählen Sie die Nummer des zu ladenden Spielstands:")
+            val eingabe = readln().toIntOrNull() ?: return null
+            if (eingabe in 1..spielstaende.size) {
+                val daten = File(spielstaende[eingabe - 1].name).readText().split(",")
+                if (daten.size < 6) return null
+                return Held(
+                    daten[0],
+                    daten[1].toInt(),
+                    daten[2].toInt(),
+                    daten[3].toInt(),
+                    daten[4].toInt(),
+                    daten[5].toInt()
+                )
+            } else {
+                println("Ungültige Auswahl.")
+                return null
             }
         }
 
-        println("Durch deine Verteidigung bist du unbeschadet geblieben!")
-        return true
-    }
+        fun spielstaendeLoeschen() {
+            val spielstandOrdner = File(".")
+            val spielstaende = spielstandOrdner.listFiles { file -> file.isFile && file.name.endsWith(".txt") }
+            if (spielstaende.isNullOrEmpty()) {
+                println("Keine Spielstände zum Löschen gefunden.")
+                return
+            }
 
+            println("Verfügbare Spielstände zum Löschen:")
+            spielstaende.forEachIndexed { index, file ->
+                println("${index + 1}. ${file.name}")
+            }
 
-    private val scheduler: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
-
-    fun benutzeItem(beutel: Beutel) {
-        println(
-            """
-        |In der hitzigen Schlacht spürst du, $name, dass du vielleicht auf etwas in deinem Beutel zurückgreifen musst.
-        |Mit raschen Handgriffen öffnest du den Beutel, um seinen Inhalt zu prüfen.
-        |
-        | 1. Heiltrank: Heilt die Hälfte deiner verlorenen Lebenspunkte.
-        | 2. Vitamine: Steigert einen deiner Werte (Angriff, Magie oder Verteidigung) um 10% für eine Minute.
-        |
-        | Welches Item möchtest du verwenden? (1/2):
-    """.trimMargin()
-        )
-
-        when (readln()) {
-            "1" -> {
-                val anzahl = beutel.items.getOrDefault("Heiltrank", 0)
-                if (anzahl > 0) {
-                    val geheiltePunkte = (maxLebenspunkte - lebenspunkte) / 2
-                    lebenspunkte += geheiltePunkte
-                    beutel.items["Heiltrank"] = anzahl - 1
-                    println("Ein warmes Gefühl durchströmt dich, während du $geheiltePunkte Lebenspunkte wiederherstellst!")
+            println("Bitte geben Sie die Nummer des zu löschenden Spielstands ein oder '0', um abzubrechen:")
+            val eingabe = readln().toIntOrNull() ?: return
+            if (eingabe == 0) {
+                println("Löschvorgang abgebrochen.")
+                return
+            }
+            if (eingabe in 1..spielstaende.size) {
+                val zuLoeschendeDatei = spielstaende[eingabe - 1]
+                if (zuLoeschendeDatei.delete()) {
+                    println("Spielstand '${zuLoeschendeDatei.name}' wurde gelöscht.")
                 } else {
-                    println("Leider hast du keinen Heiltrank mehr in deinem Beutel!")
+                    println("Spielstand '${zuLoeschendeDatei.name}' konnte nicht gelöscht werden.")
                 }
+            } else {
+                println("Ungültige Auswahl.")
             }
 
-            "2" -> {
-                val anzahl = beutel.items.getOrDefault("Vitamine", 0)
-                if (anzahl > 0) {
-                    println(
-                        """
-                    |Die Vitamine versprechen, einen deiner Werte zu stärken. Welchen möchtest du steigern?
-                    | 1. Angriff
-                    | 2. Magie
-                    | 3. Verteidigung
-                """.trimMargin()
-                    )
+        }
 
-                    val gewaehlterWert: String
-                    val urspruenglicherWert: Int
+        fun erzeugeUndInitialisiereHelden(): Held {
+            playSound("sunrise.wav")
+            val held = Held("Unbekannt", 0, 1500, 0, 0, 0)
+            held.heldenErstellen()
+            return held
+        }
 
-                    when (readln()) {
-                        "1" -> {
-                            gewaehlterWert = "Angriff"
-                            urspruenglicherWert = angriff
-                            angriff = (angriff * 1.10).toInt()
-                            println("Deine Muskeln fühlen sich gestärkt an! Dein Angriffswert steigt für eine Minute!")
-                        }
-
-                        "2" -> {
-                            gewaehlterWert = "Magie"
-                            urspruenglicherWert = magie
-                            magie = (magie * 1.10).toInt()
-                            println("Die magischen Energien in dir wachsen! Dein Magiewert steigt für eine Minute!")
-                        }
-
-                        "3" -> {
-                            gewaehlterWert = "Verteidigung"
-                            urspruenglicherWert = verteidigung
-                            verteidigung = (verteidigung * 1.10).toInt()
-                            println("Ein Schutzschild umgibt dich! Dein Verteidigungswert steigt für eine Minute!")
-                        }
-
-                        else -> {
-                            println("Unsicher, welchen Wert du steigern möchtest, nimmst du die Vitamine nicht ein.")
-                            return
-                        }
-                    }
-                    beutel.items["Vitamine"] = anzahl - 1
-
-
-                    var sekundenVerbleibend = 60
-                    val countdown = scheduler.scheduleAtFixedRate({
-                        print("\rNoch ${sekundenVerbleibend--} Sekunden bis die Wirkung der Vitamine nachlässt.")
-                        if (sekundenVerbleibend < 0) {
-                            scheduler.shutdown()
-                            println()
-                        }
-                    }, 1, 1, TimeUnit.SECONDS)
-
-
-                    scheduler.schedule({
-                        countdown.cancel(true)
-                        when (gewaehlterWert) {
-                            "Angriff" -> angriff = urspruenglicherWert
-                            "Magie" -> magie = urspruenglicherWert
-                            "Verteidigung" -> verteidigung = urspruenglicherWert
-                        }
-                        println("Die Wirkung der Vitamine lässt nach. Dein $gewaehlterWert kehrt zum ursprünglichen Wert zurück.")
-                    }, 60, TimeUnit.SECONDS)
-                } else {
-                    println("Leider hast du keine Vitamine mehr in deinem Beutel!")
-                }
+        fun lebenspunkteFarbe(lebenspunkte: Int, maxLebenspunkte: Int): String {
+            val prozent = lebenspunkte.toDouble() / maxLebenspunkte
+            return when {
+                prozent > 0.5 -> greenColor
+                prozent > 0.3 -> yellowColor
+                else -> redColor
             }
         }
     }
+
+    open fun heldenErstellen() {
+        val namenMap = mapOf(
+            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "Magier von Mythria"),
+            "Lyrana" to listOf("Sternentänzerin", "Priesterin von Silberwald", "Botin der Sterne"),
+            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "Krieger der Tiefe"),
+            "Elara" to listOf("Mondjägerin", "Waldgeister-Hüterin", "Bogenschützin von Elmswood"),
+            "Draken" to listOf("Feuerseele", "Drachentöter", "Beschützer der Berge"),
+            "Seraphel" to listOf("Windflüsterin", "Hohepriesterin der Wolken", "Göttin der Lüfte"),
+            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "Krieger des Abgrunds"),
+            "Illyria" to listOf("Wasserwächterin", "Meeresprinzessin", "Herrin der Wellen"),
+            "Orynn" to listOf("Steinhaut", "Bergbewahrer", "Zerstörer von Fels"),
+            "Azura" to listOf("Himmelsbotin", "Göttin des Zwielichts", "Wächterin des Morgenrots"),
+            "Keldorn" to listOf("Sturmbringer", "Held von Mythria's Grenzen", "Vagabund des Westens"),
+            "Nylara" to listOf("Schattenweberin", "Herrin der Nacht", "Mondpriesterin")
+        )
+
+        val (vorname, nachnamen) = namenMap.entries.shuffled().first()
+        val nachname = nachnamen.shuffled().first()
+        this.name = "$vorname $nachname"
+        val geschichte = """
+In den alten Zeiten von Zamnesia, einer Welt voller Magie und uralter Mysterien,
+erhob sich ein Held aus dem Schatten der Legenden, um das Schicksal der Reiche zu formen.
+Dieser Held, bekannt unter vielen Namen und Titeln durch die Ären, sollte bald sein eigenes Vermächtnis erschaffen.
+
+$nameColor${name.split(" ").first()}$resetColor, dessen wahre Herkunft in den Sternen geschrieben steht,
+ist bestimmt, durch große Taten in die Annalen von Zamnesia einzugehen. Vor ihm liegt ein Weg
+voller Prüfungen und Triumphe, von dunklen Höhlen bis zu den Gipfeln der unberührten Berge.
+
+Das Schicksal hat ihn zu diesem Punkt geführt, und nun ist es an der Zeit, dass sein Name
+mit Taten gefüllt wird, die so lebendig und unvergänglich sind wie das Land selbst.
+
+Seine Reise beginnt hier, in diesem Moment, während er seine Kräfte sammelt und sich auf die
+bevorstehenden Abenteuer vorbereitet.
+""".trimIndent()
+
+        for (char in geschichte) {
+            print(char)
+            Thread.sleep(11)
+            if (char == '\n') {
+                Thread.sleep(55)
+            }
+        }
+
+        println("\n")
+
+        this.lebenspunkte = 1500
+        this.angriff = 50
+        this.magie = 50
+        this.verteidigung = 50
+
+        println(
+            "$nameColor$name$resetColor\n" +
+                    "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte$resetColor/$valueColor$maxLebenspunkte$resetColor\n" +
+                    "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
+                    "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +
+                    "$labelColor${"Verteidigung:"}$resetColor $valueColor$verteidigung$resetColor\n"
+        )
+    }
+
+    open fun training() {
+        var weiterTraining = true
+
+        while (weiterTraining) {
+            println("Wähle eine Fähigkeit zum Trainieren:\n")
+            println("1. Angriff")
+            println("2. Magie")
+            println("3. Verteidigung\n")
+            print("Deine Wahl: \n")
+
+            when (readln()) {
+                "1" -> {
+                    angriff = erhoeheWert(angriff)
+                    println("$nameColor$name$resetColor - Dein Angriff ist jetzt $valueColor$angriff$resetColor\n")
+                }
+
+                "2" -> {
+                    magie = erhoeheWert(magie)
+                    println("$nameColor$name$resetColor - Deine Magie ist jetzt $valueColor$magie$resetColor\n")
+                }
+
+                "3" -> {
+                    verteidigung = erhoeheWert(verteidigung)
+                    println("$nameColor$name$resetColor - Deine Verteidigung ist jetzt $valueColor$verteidigung$resetColor\n")
+                }
+
+                else -> println("Das ist keine gültige Auswahl.")
+            }
+
+            println("Möchtest du weiter trainieren? (ja/nein)\n")
+            weiterTraining = readln() == "ja"
+        }
+
+        zeigeStatus()
+    }
+
+    open fun zeigeStatus() {
+        println("Training abgeschlossen für $nameColor$name$resetColor.")
+        println(
+            "Hier sind die aktuellen Werte:\n" +
+                    "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor\n" +
+                    "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
+                    "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +
+                    "$labelColor${"Verteidigung:"}$resetColor $valueColor$verteidigung$resetColor\n"
+        )
+    }
+
+    fun erhoeheWert(wert: Int): Int {
+        return (wert * 1.1).toInt()
+    }
+
+    open fun angreifen(gegner: Boesewicht) {
+        println("Wähle eine Attacke:\n")
+        println("1. Schwertstreich (Angriffs basierend)")
+        println("2. Feuerball (Magie basierend)")
+        println("3. Donnerschlag (Angriffs basierend)\n")
+        print("Deine Wahl: ")
+
+        when (readln()) {
+            "1" -> {
+                val schaden = berechneSchaden(50, angriff)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Schwertstreich verursacht.\n")
+            }
+
+            "2" -> {
+                val schaden = berechneSchaden(40, magie)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Feuerball verursacht.\n")
+            }
+
+            "3" -> {
+                val schaden = berechneSchaden(60, angriff)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Donnerschlag verursacht.\n")
+            }
+
+            else -> println("Das ist keine gültige Auswahl.")
+        }
+    }
+
+    open fun berechneSchaden(basisSchaden: Int, wert: Int): Int {
+        return basisSchaden + wert
+    }
+
+    open fun verteidigen() {
+        if (bonusRundenVerteidigung == 0) {
+            val verteidigungsBonus = 20
+            urspruenglicheVerteidigung = verteidigung
+            verteidigung += verteidigungsBonus
+            println("$nameColor$name$resetColor erhöht die Verteidigung um $verteidigungsBonus.")
+        }
+        bonusRundenVerteidigung = 2
+    }
+
+    open fun rundenUpdate() {
+        if (bonusRundenVerteidigung > 0) {
+            bonusRundenVerteidigung--
+            if (bonusRundenVerteidigung == 0) {
+                verteidigung = urspruenglicheVerteidigung
+                println("$nameColor$name$resetColor Verteidigungsbonus ist ausgelaufen.")
+            }
+        }
+    }
+
 }

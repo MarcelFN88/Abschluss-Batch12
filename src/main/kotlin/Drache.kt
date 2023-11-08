@@ -3,65 +3,69 @@ import kotlin.random.Random
 class Drache(
     name: String
 ) : Boesewicht(
-    name = name,
-    lebenspunkte = 4000,
-    maxLebenspunkte = 4000,
-    angriff = 45,
-    magie = 45,
-    verteidigung = 45
+    name,
+    2500,
+    2500,
+    100,
+    50,
+    80
 ) {
-    override val schatten = Schatten()
-    private var rundenZaehler = 0
 
-    init {
-        println("\nEin mächtiges Brüllen ertönt aus der Ferne, und der Himmel verdunkelt sich. Ein gewaltiger Drache namens $name erhebt sich am Horizont.")
-        Thread.sleep(2000)
-        println("$name, der von vielen in Mythria gefürchtet wird, hat Jahrhunderte in der Dunkelheit verbracht und ist nun bereit, die Welt erneut in Schatten zu hüllen.")
-        Thread.sleep(1500)
+    private var bonusRundenVerteidigung: Int = 0
+    private var urspruenglicheVerteidigung: Int = verteidigung
+
+    override var lebenspunkte: Int = maxLebenspunkte
+        set(value) {
+            field = maxOf(0, value)
+        }
+
+    companion object {
+        fun erstelleDrache(): Drache {
+            return Drache("Smaug der Schreckliche")
+        }
     }
 
-    private fun grossangriff(team: List<Held>) {
-        println("$name entfesselt seinen mächtigen Drachenodem und verursacht bei allen Helden 100 Schadenspunkte!")
+    fun entscheideAktion(normalerAngriff: () -> Unit, spezialAngriff: () -> Unit) {
+        if (Random.nextInt(100) < 80) {
+            normalerAngriff()
+        } else {
+            spezialAngriff()
+        }
+    }
+
+    fun angreifen(team: List<Held>) {
+        entscheideAktion({
+            val ziel = team.random()
+            val angriffe = listOf("Feueratem" to 100, "Klauenangriff" to 80, "Schwanzschlag" to 90)
+            val (angriffName, basisSchaden) = angriffe.random()
+            val schaden = berechneSchaden(basisSchaden, this.angriff)
+            ziel.lebenspunkte -= schaden
+            println("$name greift $ziel mit $angriffName an und verursacht $schaden Schaden.")
+        }, {
+            spezialAngriff(team)
+        })
+    }
+
+
+    private fun spezialAngriff(team: List<Held>) {
+        println("$name entfesselt eine mächtige Drachenwut.")
         team.forEach { held ->
-            held.lebenspunkte -= 100
-            if (held.lebenspunkte < 0) held.lebenspunkte = 0
+            val schaden = berechneSchaden(120, this.angriff)
+            held.lebenspunkte -= schaden
+            println("Es verursacht $schaden Schaden an $held.")
         }
     }
 
-    override fun angreifen(team: List<Held>): Int {
-        rundenZaehler++
+    override fun verteidigen() {
 
-        if (rundenZaehler % 3 == 0) {
-            grossangriff(team)
-            return 0
+        if (bonusRundenVerteidigung == 0) {
+            val verteidigungsBonus = 30
+            urspruenglicheVerteidigung = verteidigung
+            verteidigung += verteidigungsBonus
+            println("$name hüllt sich in eine dicke Rauchwolke. Verteidigung um $verteidigungsBonus erhöht.\n")
+            bonusRundenVerteidigung = 2
+        } else {
+            println("$name ist bereits von Rauch umgeben und kann die Verteidigung nicht weiter erhöhen.\n")
         }
-
-        if (lebenspunkte <= maxLebenspunkte * 0.5) {
-            println("$name fühlt sich geschwächt und ruft die Kräfte des Schattens zu Hilfe!")
-            schatten.aktivieren()
-        }
-
-        val schattenBonus = schatten.bonusAngriff()
-
-        return when (Random.nextInt(1, 4)) {
-            1 -> {
-                println("Drache $name entfesselt einen vernichtenden Feueratem!")
-                angriff + 10 + schattenBonus
-            }
-
-            2 -> {
-                println("Mit einem gewaltigen Schwung setzt $name einen zerstörerischen Schwanzschlag ein!")
-                angriff + schattenBonus
-            }
-
-            else -> {
-                println("Der mächtige Flügelschlag von $name erzeugt einen Sturm, der alles in seiner Nähe wegfegt!")
-                angriff - 5 + schattenBonus
-            }
-        }
-    }
-
-    override fun toString(): String {
-        return "Drache - ${super.toString()}"
     }
 }

@@ -2,73 +2,114 @@ import kotlin.random.Random
 
 open class Boesewicht(
     val name: String,
-    var lebenspunkte: Int = 2000,
-    val maxLebenspunkte: Int = 2000,
-    var angriff: Int = 30,
-    var magie: Int = 30,
-    var verteidigung: Int = 30
+    lebenspunkte: Int,
+    var maxLebenspunkte: Int,
+    var angriff: Int,
+    val magie: Int,
+    var verteidigung: Int
 ) {
-    open val schatten = Schatten()
+    private var bonusRundenVerteidigung: Int = 0
+    private var urspruenglicheVerteidigung: Int = verteidigung
+    var laehmung: Boolean = false
 
-    init {
-        println("\nEin finsteres Wesen ist aus den Schatten von Mythria hervorgetreten. Es ist $name, ein Bösewicht, der es sich zur Aufgabe gemacht hat, die friedlichen Bewohner des Landes zu terrorisieren.")
-        Thread.sleep(2000)
-        println("$name hat einen finsteren Blick und eine Aura, die von seiner dunklen Macht zeugt.")
-        Thread.sleep(1500)
-    }
 
-    fun rufeSchatten() {
-        if (lebenspunkte <= maxLebenspunkte * 0.5 && !schatten.aktiv) {
-            println("$name ruft den Schatten herbei!")
-            schatten.aktivieren()
+
+    open var lebenspunkte: Int = lebenspunkte
+        set(value) {
+            field = maxOf(0, value)
+        }
+
+    companion object {
+
+        const val resetColor = "\u001B[0m"
+        const val nameColor = "\u001B[33m"
+        private const val labelColor = "\u001B[34m"
+        private const val valueColor = "\u001B[32m"
+
+        fun erzeugeBoesewicht(): Boesewicht {
+            val namenListe = mapOf(
+                "Zantor" to "der Verderber",
+                "Morgath" to "der Grausame",
+                "Korvax" to "der Vernichter",
+                "Sindar" to "der Schatten",
+                "Guldan" to "der Schwarzmagier"
+            )
+
+            val (vorname, titel) = namenListe.entries.shuffled().first()
+            val vollerName = "$vorname $titel"
+
+            val boesewicht = Boesewicht(vollerName, 2000, 2000, 70, 70, 70)
+
+            boesewicht.druckeEigenschaften()
+
+            return boesewicht
+        }
+
+        fun lebenspunkteFarbe(lebenspunkte: Int, maxLebenspunkte: Int): String {
+            val prozent = lebenspunkte.toDouble() / maxLebenspunkte
+            return when {
+                prozent > 0.5 -> Held.greenColor
+                prozent > 0.3 -> Held.yellowColor
+                else -> Held.redColor
+            }
         }
     }
-    fun angreifen(): Pair<String, Int> {
-        println("\n$name sammelt seine düsteren Kräfte für einen Angriff...")
-        return when (Random.nextInt(1, 4)) {
+
+    fun druckeEigenschaften() {
+        println("$nameColor$name$resetColor")
+        println("${labelColor}Lebenspunkte:$resetColor ${valueColor}$lebenspunkte/$maxLebenspunkte$resetColor")
+        println("${labelColor}Angriff:$resetColor ${valueColor}$angriff$resetColor")
+        println("${labelColor}Magie:$resetColor ${valueColor}$magie$resetColor")
+        println("${labelColor}Verteidigung:$resetColor ${valueColor}$verteidigung$resetColor\n")
+        println("Der Bösewicht $nameColor$name$resetColor steht bereit, um Unheil über die Welt zu bringen!\n")
+    }
+    fun angreifen(gegner: Held) {
+        val aktion = Random.nextInt(1, 4)
+
+        when (aktion) {
             1 -> {
-                val schaden = Random.nextInt(20, 40)
-                println("$name führt mit unvorstellbarer Dunkelheit einen dämonischen Schlag aus und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
-                Pair("Dämonischer Schlag", schaden)
+                val schaden = berechneSchaden(50, angriff)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Schwertstreich verursacht.\n")
             }
-
             2 -> {
-                val schaden = Random.nextInt(20, 40)
-                println("$name beschwört aus der Tiefe seines Herzens einen finsteren Magieblitz und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
-                Pair("Finsterer Magieblitz", schaden)
+                val schaden = berechneSchaden(40, magie)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Feuerball verursacht.\n")
             }
-
-            else -> {
-                val schaden = Random.nextInt(20, 40)
-                println("${name}, mit dem Zorn der verbotenen Mächte, schwingt sein dunkles Schwert und verursacht \u001B[31m$schaden\u001B[0m Schaden!")
-                Pair("Dunkler Schwertstreich", schaden)
+            3 -> {
+                val schaden = berechneSchaden(60, angriff)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Donnerschlag verursacht.\n")
             }
         }
     }
 
-    fun blocken(): Boolean {
-        val chanceZuBlocken = Random.nextInt(1, 101)
-        return if (chanceZuBlocken <= 50) {
-            println("$name umgibt sich mit einer schützenden dunklen Aura und blockt deinen Angriff!")
-            true
-        } else {
-            false
-        }
+    fun berechneSchaden(basisSchaden: Int, wert: Int): Int {
+        return basisSchaden + wert
     }
 
-    fun erhalteSchaden(schaden: Int) {
+    open fun erleideSchaden(schaden: Int) {
         lebenspunkte -= schaden
-        if (lebenspunkte < 0) {
-            lebenspunkte = 0
+        println("$name erleidet $schaden Schaden.")
+    }
+    open fun verteidigen() {
+        if (bonusRundenVerteidigung == 0) {
+            val verteidigungsBonus = 20
+            urspruenglicheVerteidigung = verteidigung
+            verteidigung += verteidigungsBonus
+            println("$name erhöht die Verteidigung um $verteidigungsBonus.\n")
+            bonusRundenVerteidigung = 2
         }
-        println("$name ächzt vor Schmerz und hat jetzt noch $lebenspunkte Lebenspunkte!")
     }
 
-    override fun toString(): String {
-        return "Name: $name, Lebenspunkte: $lebenspunkte, Angriff: $angriff, Magie: $magie, Verteidigung: $verteidigung"
-    }
-
-    open fun angreifen(team: List<Held>): Int {
-        TODO("Not yet implemented")
+    fun rundenUpdate() {
+        if (bonusRundenVerteidigung > 0) {
+            bonusRundenVerteidigung--
+            if (bonusRundenVerteidigung == 0) {
+                verteidigung = urspruenglicheVerteidigung
+                println("Der Verteidigungsbonus von $name ist ausgelaufen.\n")
+            }
+        }
     }
 }

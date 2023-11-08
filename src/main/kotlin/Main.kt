@@ -1,3 +1,4 @@
 fun main() {
-    auswahlMenu()
+  Start()
 }
+

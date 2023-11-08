@@ -1,41 +1,52 @@
 class Beutel {
+    private var heiltraenke = 3
+    private var vitamine = 7
 
-    private val kapazitaet = 10
-    val items: MutableMap<String, Int> = mutableMapOf(
-        "Heiltrank" to 3,
-        "Vitamine" to 5
-    )
-
-    fun zeigeInhalt() {
-        println("\nWährend deiner Reisen durch Mythria hast du einige wertvolle Gegenstände in deinem Beutel gesammelt.")
-        Thread.sleep(1500)
-        println("Dein Beutel enthält:")
-        items.forEach { (item, anzahl) ->
-            println("- $item: $anzahl Stück")
-        }
-        println("\nJeder freie Platz in deinem Beutel könnte in zukünftigen Kämpfen von entscheidender Bedeutung sein. Freier Platz: ${kapazitaet - items.values.sum()}")
-    }
-
-    fun fuegeItemHinzu(item: String, anzahl: Int): Boolean {
-        println("\nDu versuchst, $anzahl $item zu deinem Beutel hinzuzufügen...")
-        Thread.sleep(1000)
-        val aktuelleAnzahl = items.getOrDefault(item, 0)
-        return if (aktuelleAnzahl + anzahl <= kapazitaet) {
-            items[item] = aktuelleAnzahl + anzahl
-            println("Erfolg! Du hast $anzahl $item zu deinem Beutel hinzugefügt.")
-            true
+    private fun benutzeHeiltrank(held: Held) {
+        if (heiltraenke > 0) {
+            val heilung = (held.maxLebenspunkte * 0.3).toInt()
+            held.lebenspunkte = minOf(held.lebenspunkte + heilung, held.maxLebenspunkte)
+            heiltraenke--
+            println("Der Held hat einen Heiltrank benutzt und $heilung Lebenspunkte wiederhergestellt.")
         } else {
-            println("Dein Beutel ist zu voll! Die Gegenstände von Mythria sind wertvoll, aber du musst sicherstellen, dass du nicht zu viel mit dir herumträgst. Du kannst keine weiteren Items hinzufügen.")
-            false
+            println("Du hast keine Heiltränke mehr!")
         }
     }
 
-    override fun toString(): String {
-        return buildString {
-            append("Beutelinhalt:\n")
-            items.forEach { (item, anzahl) ->
-                append(" - $item: $anzahl Stück\n")
-            }
+    private fun benutzeVitamine(held: Held) {
+        if (vitamine > 0) {
+            held.temporaereVerteidigungErhoehen(3)
+            vitamine--
+            println("Der Held hat Vitamine benutzt und die Verteidigung wird für die nächsten 3 Runden um 20% erhöht.\n")
+        } else {
+            println("Du hast keine Vitamine mehr!")
         }
     }
+
+    fun zeigeInventar() {
+        println("Beutel-Inventar:\n ")
+        println("Heiltränke: $heiltraenke")
+        println("Vitamine: $vitamine\n")
+    }
+
+    fun waehleUndBenutze(held: Held) {
+        println("Wähle einen Gegenstand aus deinem Beutel:\n")
+        println("1. Heiltrank (Heilt 30% deiner max. LP)")
+        println("2. Vitamine (Steigert Verteidigung um 20% für 3 Runden)\n")
+        println("Deine Wahl: \n")
+        when (readln()) {
+            "1" -> benutzeHeiltrank(held)
+            "2" -> benutzeVitamine(held)
+            else -> println("Ungültige Auswahl. Du verlierst deine Aktion.")
+        }
+    }
+
+    fun fuegeHinzu(gegenstand: String) {
+        when (gegenstand) {
+            "Heiltrank" -> heiltraenke++
+            "Vitamine" -> vitamine++
+            else -> println("Gegenstand nicht bekannt. Kein Gegenstand hinzugefügt.")
+        }
+    }
+
 }
