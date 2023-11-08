@@ -1,312 +1,235 @@
-## Übersicht
+# Abenteuerspiel - Kotlin Text-based Adventure
 
-Dieses textbasierte Rollenspiel, entwickelt in Kotlin, lässt Spieler in ein Abenteuer eintauchen, in dem sie zwischen verschiedenen Modi wählen, einen Helden aufbauen und in Kämpfen antreten können. Das Spiel läuft in IntelliJ IDEA und bietet eine einfache Benutzeroberfläche mit textbasierten Befehlen.
+Das Abenteuerspiel ist ein in Kotlin geschriebenes textbasiertes Spiel. Die Spieler können zwischen Einzelmodus und Teammodus wählen, ihren Helden trainieren, gegen Bösewichte kämpfen und ihre Spielstände verwalten.
 
-## Hauptfunktionen
+## Features
 
-- **Spielstart**: Wählen Sie zwischen Einzel- und Teammodus zu Beginn des Spiels.
-- **Hauptmenü**: Starten Sie ein neues Spiel, laden Sie einen Spielstand oder löschen Sie einen vorhandenen.
-- **Helden-Management**: Erstellen und verwalten Sie Ihren Helden mit verschiedenen Fähigkeiten.
-- **Training und Kämpfe**: Trainieren Sie Ihren Helden oder ziehen Sie gegen Bösewichte in die Schlacht.
-- **Sound-Wiedergabe**: Für ein immersives Erlebnis können Sie Soundeffekte abspielen lassen.
-- **Rundenbasierter Kampf**: Treffen Sie strategische Entscheidungen im Kampf gegen Ihre Gegner.
+- Einzel- und Teammodus für Kämpfe
+- Rundenbasierter Kampfmechanismus
+- Trainingsmodus für den Helden
+- Spielstände speichern und laden
+- Dynamische Ereignisse basierend auf Spielerentscheidungen
+
+## Starten des Spiels
+
+Das Spiel beginnt mit einer Begrüßungsnachricht und Optionen für den Spieler, entweder den Einzelmodus oder den Teammodus auszuwählen. Die Spiellogik navigiert dann entsprechend weiter.
+
+## Hauptmenü
+
+Im Hauptmenü kann der Spieler wählen, ob er:
+
+- Ein neues Spiel starten
+- Ein gespeichertes Spiel laden
+- Einen Spielstand löschen möchte
+
+Abhängig von der Wahl des Spielers werden unterschiedliche Aktionen durchgeführt.
+
+## Kämpfen
+
+Im Kampf kann der Held:
+
+- Angreifen
+- Verteidigen
+- Gegenstände aus dem Beutel verwenden
+
+Die Kämpfe sind rundenbasiert, und der Fortschritt des Spielers wird durch die Anzahl der Siege und Niederlagen festgehalten.
+
+## Sound-Effekte
+
+Das Spiel beinhaltet eine Funktion, um Sound-Dateien abzuspielen. Diese kann genutzt werden, um das Spielerlebnis mit akustischen Effekten zu bereichern.
+
+## Verwendung
+
+Zum Spielen das Spiel ausführen und den Anweisungen in der Konsole folgen. Es werden verschiedene Optionen angeboten, zwischen denen der Spieler wählen kann, um das Spiel zu steuern.
 
 
-## Spielablauf
 
-1. Das Spiel beginnt im Hauptmenü, wo die Spieler die Option haben, ein neues Spiel zu starten, einen Spielstand zu laden oder einen Spielstand zu löschen.
-2. Nachdem ein neues Spiel gestartet oder ein Spielstand geladen wurde, gelangen die Spieler ins Teammenü, wo sie ihr Team trainieren, in den Kampf ziehen oder das Spiel speichern und beenden können.
-3. Während des Trainings können Spieler einen Helden aus ihrem Team auswählen, um seine Fähigkeiten zu verbessern.
-4. Beim Start eines Kampfes wird ein Bösewicht zufällig erstellt, und der Kampf findet rundenbasiert statt.
-5. Die Spieler können ihren Helden wählen, um anzugreifen, sich zu verteidigen oder Gegenstände aus ihrem Beutel zu verwenden.
-6. Der Kampf endet, wenn entweder alle Helden besiegt sind oder der Bösewicht besiegt wurde.
+Das Beutel-Verwaltungssystem ist eine einfache Klasse, die in Rollenspielen eingesetzt werden kann, um das Inventar eines Helden zu verwalten. Es ermöglicht dem Helden, Heiltränke und Vitamine zu verwenden und zu verwalten.
+# Beutel-Verwaltungssystem
 
-## Hinweise
-
-- Vor dem Start des Spiels stellen Sie sicher, dass die Sounddatei `sunrise.wav` im gleichen Verzeichnis vorhanden ist.
-- Die Konsolenausgabe verwendet ANSI-Farbcodes, um Textfarben für verschiedene Elemente des Spiels zu ändern.
-- Die Spielstanddateien werden im aktuellen Verzeichnis gespeichert und haben die Endung `.txt`.
-
-Viel Spaß beim Spielen!
 
 ## Funktionen
 
-### `erstelleBoesewicht()`
-Erstellt einen neuen Bösewicht für das Spiel. Es wird zufällig entschieden, ob es sich um einen Drachen oder einen dunklen Magier handelt.
+### Heiltrank verwenden
 
-### `starteSpielUndTeamMenu(team: List<Held>? = null)`
-Startet das Spiel und zeigt das Teammenü an. Benutzer können ein neues Team erstellen oder ein vorhandenes Team nutzen.
+- Ein Held kann einen Heiltrank aus seinem Beutel verwenden, um seine Lebenspunkte um 30% seiner maximalen Lebenspunkte zu heilen.
+- Es kann nur verwendet werden, wenn der Held noch Heiltränke in seinem Beutel hat.
 
-### `teamTraining(team: List<Held>)`
-Ermöglicht einem Held aus dem Team, durch Training stärker zu werden.
+### Vitamine verwenden
 
-### `speichern(team: List<Held>)`
-Speichert den aktuellen Spielstand in einer Textdatei.
+- Ein Held kann Vitamine verwenden, um seine temporäre Verteidigung für die nächsten 3 Runden um 20% zu erhöhen.
+- Es kann nur verwendet werden, wenn der Held noch Vitamine in seinem Beutel hat.
 
-### `laden(): List<Held>?`
-Lädt einen Spielstand aus einer Textdatei.
+### Inventar anzeigen
 
-### `spielstaendeLoeschen()`
-Löscht einen vorhandenen Spielstand.
+- Zeigt die Anzahl der Heiltränke und Vitamine im Beutel des Helden an.
 
-### `hauptMenuTeam()`
-Zeigt das Hauptmenü des Spiels an und ermöglicht dem Benutzer, ein neues Spiel zu starten, einen Spielstand zu laden oder einen Spielstand zu löschen.
+### Gegenstand verwenden
 
-### `starteRundenbasiertenKampf(team: List<Held>, boesewicht: Boesewicht, beutel: Beutel)`
-Beginnt einen rundenbasierten Kampf zwischen dem Team des Spielers und einem Bösewicht.
+- Ermöglicht dem Spieler, einen Gegenstand aus dem Beutel zu wählen und zu verwenden.
+- Der Spieler muss zwischen "1" für Heiltrank und "2" für Vitamine wählen, ansonsten verliert der Spieler die Aktion.
 
-### `rundenbasierterKampfTeam(team: List<Held>, boesewicht: Boesewicht, beutel: Beutel)`
-Verwaltet den Ablauf eines rundenbasierten Kampfes, wobei das Team und der Bösewicht abwechselnd Aktionen ausführen.
+### Gegenstand hinzufügen
+
+- Fügt einen Heiltrank oder Vitamine zum Beutel hinzu, wenn der entsprechende Gegenstand gewählt wird.
 
 
 
 
+## Klasse: Boesewicht
 
-
-- **Start**: Initialisieren Sie das Spiel mit der `Start()`-Funktion.
-- **Navigation**: Benutzen Sie die Konsole zur Navigation im Menü.
-- **Kampf**: Folgen Sie den Anweisungen auf dem Bildschirm während der Kampfszenen.
-
-## Funktionen im Detail
-
-### `Start()`
-- Startpunkt des Spiels mit der Auswahl des Spielmodus.
-- Bei ungültiger Eingabe wird der Benutzer erneut zur Eingabe aufgefordert.
-
-### `hauptMenu()`
-- Hauptmenüführung mit Optionen zum Spielstart, Laden und Löschen eines Spielstandes.
-- Erstellung oder Laden eines Helden basierend auf der Nutzereingabe.
-
-### `menu(held: Held)`
-- Das Hauptmenü für verschiedene Aktivitäten wie Training oder Kampf.
-- Der Kampf wird durch einen generierten Bösewicht initiiert.
-
-### `playSound(soundFileName: String)`
-- Spielt eine Sounddatei ab. Fehler werden auf der Konsole ausgegeben.
-
-### `rundenbasierterKampf(held: Held, boesewicht: Boesewicht, beutel: Beutel)`
-- Ein rundenbasierter Kampfmechanismus, bei dem der Spieler verschiedene Aktionen auswählen kann.
-- Lebenspunkte werden nach jeder Runde aktualisiert und der Fortschritt des Kampfes wird angezeigt.
-
-## Hinweise
-
-- Nutzen Sie die einfache Texteingabe zur Spielsteuerung.
-- Der Erfolg im Spiel hängt vom strategischen Einsatz von Heldenattributen und Beutelinhalt ab.
-- Fortschritte können gespeichert werden, um bei der nächsten Sitzung fortzufahren.
-
-Viel Spaß beim Spielen!
-
-
-
-
-
-## Klasse `Held`
-
-Die `Held` Klasse ist das Herzstück des Spiels. Sie definiert die Eigenschaften und Fähigkeiten eines Helden.
+Die `Boesewicht`-Klasse ist eine offene Klasse, die erweitert werden kann, um verschiedene Arten von Bösewichten zu erstellen. Sie verfügt über Attribute zur Verwaltung von Lebenspunkten, Angriff, Magie und Verteidigung.
 
 ### Eigenschaften
+
+- `name`: Der Name des Bösewichts (konstant).
+- `lebenspunkte`: Aktuelle Lebenspunkte, nicht weniger als 0.
+- `maxLebenspunkte`: Maximale Lebenspunkte.
+- `angriff`: Wert des Angriffs.
+- `magie`: Magiewert für magische Angriffe.
+- `verteidigung`: Wert der Verteidigung.
+
+### Methoden
+
+- `druckeEigenschaften()`: Druckt die Eigenschaften des Bösewichts aus.
+- `angreifen(gegner: Held)`: Führt einen Angriff gegen einen Helden aus.
+- `berechneSchaden(basisSchaden: Int, wert: Int)`: Berechnet den Schaden basierend auf dem Basis-Schaden und dem Angriffs- oder Magiewert.
+- `erleideSchaden(schaden: Int)`: Reduziert die Lebenspunkte des Bösewichts, wenn Schaden erlitten wird.
+- `verteidigen()`: Erhöht die Verteidigung für eine bestimmte Anzahl von Runden.
+- `rundenUpdate()`: Aktualisiert den Zustand nach jeder Runde.
+
+
+# Drache-Klasse
+
+## Beschreibung
+Die `Drache`-Klasse ist eine spezialisierte Implementierung eines Bösewichts in einem Spiel, das Rollenspielelemente enthält. Diese Klasse erbt von der `Boesewicht`-Basisklasse und fügt spezifische Merkmale und Verhaltensweisen eines Drachens hinzu, wie spezielle Angriffe und Verteidigungsmechanismen.
+
+## Features
+- **Erstellung eines Drachen:** Die Klasse bietet eine `companion object`-Factory-Methode `erstelleDrache`, die eine Instanz von `Drache` mit einem vordefinierten Namen erstellt.
+- **Angriffsentscheidung:** Der Drache kann zwischen normalen und speziellen Angriffen wählen.
+- **Spezialangriff:** Der Drache kann einen mächtigen Flächenangriff ausführen, der alle Helden im Team trifft.
+- **Verteidigung:** Der Drache kann seine Verteidigung mit einem Bonus für eine bestimmte Anzahl von Runden erhöhen.
+
+
+# Dunkler Magier Klasse
+
+Die `DunklerMagier`-Klasse ist eine spezialisierte Unterklasse von `Boesewicht`, die in einem Fantasy-Rollenspiel verwendet wird. Ein `DunklerMagier` ist ein mächtiger Gegner, der spezielle magische Angriffe und Verteidigungsfähigkeiten besitzt.
+
+## Features
+
+- **Magischer Schild:** Der `DunklerMagier` kann einen magischen Schild aktivieren, der zusätzlichen Schutz bietet.
+- **Spezialangriff:** Zusätzlich zu normalen magischen Angriffen kann der `DunklerMagier` einen mächtigen speziellen Angriff ausführen, der das gesamte Helden-Team betrifft.
+- **Aktionen Entscheiden:** Der `DunklerMagier` kann strategisch zwischen normalen und speziellen Angriffen basierend auf einer Zufallsentscheidung wählen.
+
+## Klassen
+- `Held`: Die Basisklasse für Helden-Objekte mit Eigenschaften wie Name, Lebenspunkte, Angriff, Magie und Verteidigung.
+
+## Funktionen
+- `temporaereVerteidigungErhoehen(int runden)`: Erhöht temporär die Verteidigung des Helden.
+- `aktualisiereVerteidigung()`: Aktualisiert die Verteidigung des Helden nach dem Ablauf von Bonus-Runden.
+- `speichern()`: Speichert den aktuellen Zustand des Helden in eine Datei.
+- `laden()`: Lädt einen Helden aus einer gespeicherten Datei.
+- `spielstaendeLoeschen()`: Löscht vorhandene Spielstände.
+- `erzeugeUndInitialisiereHelden()`: Erstellt und initialisiert einen neuen Helden.
+- `heldenErstellen()`: Erzeugt einen Helden mit zufälligem Namen und Eigenschaften.
+- `training()`: Ermöglicht es dem Helden, seine Fähigkeiten zu trainieren.
+- `zeigeStatus()`: Zeigt den aktuellen Status des Helden an.
+- `angreifen(Boesewicht gegner)`: Stellt den Angriff auf einen Bösewicht dar.
+
+## Start des Spiels
+Um das Spiel zu starten, kann die Methode `erzeugeUndInitialisiereHelden()` verwendet werden, um einen neuen Helden zu erzeugen und mit dem Spiel zu beginnen.
+
+## Speichern und Laden
+Das Spiel bietet die Möglichkeit, den Fortschritt zu speichern und zu einem späteren Zeitpunkt wieder zu laden. Dies wird durch die Methoden `speichern()` und `laden()` ermöglicht.
+
+## Training
+Spieler können ihre Fähigkeiten verbessern, indem sie die Methode `training()` verwenden, welche interaktive Optionen zum Trainieren bietet.
+
+
+
+# Krieger Klasse
+
+Die `Krieger`-Klasse ist eine Erweiterung der `Held`-Klasse und repräsentiert einen mutigen und starken Krieger in einem Fantasy-Rollenspiel.
+
+## Eigenschaften
+
+- `name`: Der Name des Kriegers, welcher aus einer Liste von heroischen Titeln und Vornamen generiert wird.
+- `lebenspunkte`: Die aktuellen Gesundheitspunkte des Kriegers.
+- `maxLebenspunkte`: Die maximalen Gesundheitspunkte, die der Krieger haben kann.
+- `angriff`: Die Angriffskraft des Kriegers, die in Kampfhandlungen verwendet wird.
+- `magie`: Der magische Wert des Kriegers, der seine magischen Fähigkeiten widerspiegelt.
+- `verteidigung`: Die Fähigkeit des Kriegers, eingehenden Schaden zu reduzieren.
+
+## Methoden
+
+- `heldenErstellen()`: Generiert einen neuen Krieger mit einem einzigartigen Namen und setzt alle Attribute auf Standardwerte für den Beginn des Spiels.
+- `angreifen(gegner: Boesewicht)`: Ermöglicht es dem Krieger, einen Gegner anzugreifen und Schaden zu verursachen.
+- `berechneSchaden(basisSchaden: Int, wert: Int)`: Berechnet den Schaden basierend auf dem Basiswert und einem Angriffs- oder Verteidigungswert.
+- `verteidigen()`: Erhöht temporär die Verteidigung des Kriegers, wenn er sich verteidigt.
+- `rundenUpdate()`: Aktualisiert den Status des Kriegers am Ende jeder Runde.
+- `temporaereVerteidigungErhoehen(runden: Int)`: Erhöht die Verteidigung des Kriegers temporär für eine bestimmte Anzahl von Runden.
+- `aktualisiereVerteidigung()`: Aktualisiert die Verteidigung des Kriegers nach dem Auslaufen des temporären Verteidigungsbuffs.
+
+
+# Magier Klasse
+
+Dieses Repository enthält eine Implementierung einer `Magier`-Klasse in Kotlin, die von der abstrakten Klasse `Held` erbt. Der `Magier` ist eine spezialisierte Charakterklasse mit Fähigkeiten für magische Angriffe und Verteidigung.
+
+## Funktionalitäten
+
+- Erstellung eines Magier-Helden mit einem zufälligen Namen und speziellen Titeln.
+- Möglichkeit, einen Gegner mit verschiedenen magischen Angriffen anzugreifen.
+- Verteidigung verstärken durch Schutzzauber.
+- Rundenbasiertes Update für temporäre Verteidigung.
+
+## Methoden
+
+- `heldenErstellen()`: Erstellt einen neuen Helden mit vordefinierten Werten für Lebenspunkte, Angriff, Magie und Verteidigung.
+- `angreifen(gegner: Boesewicht)`: Führt einen Angriff auf den Gegner aus und berechnet den verursachten Schaden basierend auf der gewählten magischen Attacke.
+- `verteidigen()`: Verstärkt die Verteidigung des Magiers temporär.
+- `rundenUpdate()`: Aktualisiert die Verteidigungsboni und -effekte nach jeder Runde.
+- `temporaereVerteidigungErhoehen(runden: Int)`: Erhöht die Verteidigung temporär für eine bestimmte Anzahl von Runden.
+- `aktualisiereVerteidigung()`: Setzt die Verteidigungswerte nach dem Ablauf von Bonus-Effekten zurück.
+
+
+
+# Helden-Manipulator
+
+Der `Manipulator` ist eine spezialisierte Klasse in einem fiktiven Spiel, welche die Fähigkeiten und Charakteristika eines spielbaren Helden definiert. Diese Klasse erweitert die Basisklasse `Held` und bietet maßgeschneiderte Funktionalitäten für Charaktere, die auf Manipulation und Kontrolle spezialisiert sind.
+
+## Eigenschaften
+
+Die `Manipulator`-Klasse hat folgende Eigenschaften:
 
 - `name`: Der Name des Helden.
 - `lebenspunkte`: Die aktuellen Lebenspunkte des Helden.
 - `maxLebenspunkte`: Die maximalen Lebenspunkte des Helden.
 - `angriff`: Die Angriffskraft des Helden.
 - `magie`: Die magischen Fähigkeiten des Helden.
-- `verteidigung`: Die Verteidigungskraft des Helden.
-
-### Methoden
-
-- `temporaereVerteidigungErhoehen(runden)`: Erhöht die Verteidigung des Helden temporär für eine bestimmte Anzahl an Runden.
-- `aktualisiereVerteidigung()`: Aktualisiert die Verteidigung des Helden, wenn der temporäre Bonus ausläuft.
-- `speichern()`: Speichert den aktuellen Zustand des Helden in einer Datei.
-- `laden()`: Lädt einen Helden aus einer Datei.
-- `spielstaendeLoeschen()`: Löscht gespeicherte Spielstände.
-- `erzeugeUndInitialisiereHelden()`: Erzeugt einen neuen Helden und führt die initiale Konfiguration durch.
-- `heldenErstellen()`: Startet den Prozess des Heldenerschaffens und lässt den Spieler einen Namen wählen.
-- `training()`: Ermöglicht es dem Helden, seine Fähigkeiten zu verbessern.
-- `zeigeStatus()`: Zeigt den aktuellen Status des Helden an.
-- `angreifen(gegner)`: Führt einen Angriff gegen einen Gegner aus.
-
-
-
-
-
-
-
-# Krieger Klasse
-
-Die `Krieger` Klasse ist ein Teil des Abenteuerspiels und repräsentiert einen Helden mit speziellen Fähigkeiten und Attributen. Als Unterklasse von `Held`, besitzt `Krieger` zusätzliche Methoden und Eigenschaften, die das Kämpfen und Verteidigen innerhalb des Spiels ermöglichen.
-
-## Features
-
-- **Helden Erstellung:** Generiert einen Krieger mit einem zufälligen Namen und spezifischen Attributen.
-- **Angriffsmethoden:** Ermöglicht dem Krieger verschiedene Angriffsarten gegen Bösewichte zu verwenden.
-- **Verteidigung:** Die Fähigkeit, sich zu verteidigen und temporär die Verteidigung zu erhöhen.
-- **Runden Update:** Aktualisiert den Status des Kriegers nach jeder Runde.
-
-## Nutzung der Krieger Klasse
-
-Die `Krieger` Klasse wird automatisch durch die Spiellogik verwendet, wenn ein neuer Held erstellt wird. Die Interaktion erfolgt über die Konsole, in der Sie unterschiedliche Aktionen während Ihres Zuges auswählen können.
-
-## Beitrag
-
-Fühlen Sie sich frei, zu diesem Projekt beizu
-
-
-
-## Klasse `Magier`
-
-Die `Magier`-Klasse ist eine Erweiterung der `Held`-Klasse und repräsentiert einen magischen Charakter mit spezifischen Fähigkeiten und Attributen. Zu diesen Attributen gehören Lebenspunkte, Angriff, Magie und Verteidigung. Ein `Magier` kann Angriffe ausführen, sich verteidigen und hat zusätzliche magiebezogene Methoden.
-
-### Funktionen
-
-- `heldenErstellen()`: Initialisiert den Magier mit einem einzigartigen Namen und setzt die Grundwerte für Lebenspunkte, Angriff, Magie und Verteidigung.
-- `angreifen(gegner: Boesewicht)`: Erlaubt dem Magier, einen von mehreren Zaubersprüchen auszuwählen, um den Gegner anzugreifen.
-- `verteidigen()`: Erhöht die Verteidigung des Magiers temporär, wenn sie nicht bereits erhöht wurde.
-- `rundenUpdate()`: Aktualisiert den Status der Verteidigung nach jeder Runde.
-- `temporaereVerteidigungErhoehen(runden: Int)`: Erhöht die Verteidigung des Magiers temporär für eine bestimmte Anzahl von Runden.
-- `aktualisiereVerteidigung()`: Aktualisiert die Verteidigung des Magiers, wenn die temporäre Erhöhung abgelaufen ist.
-
-
-
-Manipulator
-
-Überblick
-
-Die Klasse Manipulator ist eine Erweiterung der Basisklasse Held und implementiert spezielle Funktionen für einen Charakter im Spielkontext, der manipulative Fähigkeiten besitzt. Diese Klasse bietet Methoden zur Erstellung eines Helden, zum Angreifen von Gegnern mit verschiedenen manipulativen Fähigkeiten, zur Verteidigung und zur Aktualisierung der Heldenattribute mit jeder Runde.
-
-Funktionen
-
-heldenErstellen(): Initialisiert einen neuen Helden mit einem einzigartigen Namen und festgelegten Attributen.
-angreifen(gegner: Boesewicht): Bietet dem Spieler eine Auswahl an manipulativen Fähigkeiten, um gegen den Bösewicht zu kämpfen.
-berechneSchaden(basisSchaden: Int, wert: Int): Berechnet den verursachten Schaden basierend auf dem magischen Wert und zusätzlichen Boni.
-verteidigen(): Erhöht die Verteidigung des Helden temporär.
-rundenUpdate(): Aktualisiert die Runden-basierten Effekte auf den Helden.
-temporaereVerteidigungErhoehen(runden: Int): Erhöht die Verteidigung des Helden für eine bestimmte Anzahl von Runden.
-aktualisiereVerteidigung(): Aktualisiert den Verteidigungsstatus nach Ablauf temporärer Boni.
-
-
-
-# Beutel-Klasse
-
-Die `Beutel`-Klasse ist ein wesentlicher Bestandteil des Inventar-Systems im Rollenspiel. Sie verwaltet die Gegenstände, die ein Spielercharakter bei sich tragen kann, speziell Heiltränke und Vitamine.
-
-## Funktionen
-
-- `zeigeInventar()`: Gibt eine Übersicht über die aktuell im Beutel vorhandenen Gegenstände aus.
-- `waehleUndBenutze(held: Held)`: Ermöglicht dem Spieler, einen Gegenstand aus dem Beutel auszuwählen und zu benutzen.
-- `fuegeHinzu(gegenstand: String)`: Fügt einen Gegenstand zum Beutel hinzu, sofern dieser bekannt ist.
-
-## Gegenstände
-
-### Heiltränke
-
-- Beim Verwenden eines Heiltranks wird der Lebenspunktestand des Helden um 30% seiner maximalen Lebenspunkte erhöht.
-- Die Anzahl der Heiltränke wird im Beutel verfolgt und bei Benutzung verringert.
-- Wenn keine Heiltränke mehr vorhanden sind, wird eine entsprechende Nachricht ausgegeben.
-
-### Vitamine
-
-- Vitamine erhöhen temporär die Verteidigung des Helden um 20% für die nächsten 3 Runden.
-- Ähnlich wie Heiltränke wird ihre Anzahl im Beutel geführt und bei Gebrauch dekrementiert.
-- Ist kein Vitamin mehr vorrätig, wird der Spieler darüber informiert.
-
-## Nutzung
-
-Die `waehleUndBenutze` Funktion erlaubt es dem Spieler, über eine einfache Texteingabe (1 für Heiltränke, 2 für Vitamine) einen Gegenstand zu nutzen. Eine unpassende Eingabe führt dazu, dass der Spieler seine Aktion für die Runde verliert.
-
-## Hinweise zur Implementierung
-
-- Die Funktionen `benutzeHeiltrank` und `benutzeVitamine` sind als private deklariert, da sie ausschließlich intern von der `waehleUndBenutze` Funktion aufgerufen werden sollten.
-- Es wird empfohlen, die Klassen `Held` und `Beutel` weiter zu modularisieren, um die Wartbarkeit und Erweiterbarkeit des Codes zu verbessern.
-
-Bitte beachten Sie, dass die `Held`-Klasse entsprechende Funktionen bereitstellen muss, um die Heilung und Verteidigungsverstärkung korrekt zu verarbeiten.
-
-## Zukünftige Erweiterungen
-
-- Erweiterung der Gegenstandsliste um weitere Items wie Zaubertränke, Buff-Food etc.
-- Implementierung eines Systems zur Dauerhaftigkeit von Gegenständen.
-- Möglichkeit zur Interaktion mit anderen Inventar-Systemen oder Händlern im Spiel.
-
-
-
-# Boesewicht-Klasse
-
-Die `Boesewicht`-Klasse repräsentiert einen Gegner im Spiel, mit dem der Held konfrontiert werden kann. Die Klasse enthält Informationen über Lebenspunkte, Angriffsstärke, Magie, Verteidigung und Zustände wie Lähmung und temporäre Verteidigungserhöhungen.
-
-## Eigenschaften
-
-- `name`: Der Name des Bösewichts, inklusive eines Titels.
-- `lebenspunkte`: Die aktuellen Lebenspunkte des Bösewichts.
-- `maxLebenspunkte`: Die maximalen Lebenspunkte des Bösewichts.
-- `angriff`: Der Angriffswert des Bösewichts.
-- `magie`: Der Magiewert des Bösewichts.
-- `verteidigung`: Der Verteidigungswert des Bösewichts.
-- `laehmung`: Ein Zustand, der anzeigt, ob der Bösewicht gelähmt ist oder nicht.
+- `verteidigung`: Die Verteidigungsfähigkeit des Helden.
 
 ## Methoden
 
-- `druckeEigenschaften()`: Gibt die Eigenschaften des Bösewichts formatiert in der Konsole aus.
-- `angreifen(gegner: Held)`: Wählt eine Angriffsart aus und verursacht entsprechenden Schaden am Helden.
-- `berechneSchaden(basisSchaden: Int, wert: Int)`: Berechnet den Schaden, der einem Held zugefügt wird.
-- `erleideSchaden(schaden: Int)`: Verringert die Lebenspunkte des Bösewichts, wenn er Schaden erleidet.
-- `verteidigen()`: Erhöht temporär die Verteidigung des Bösewichts.
-- `rundenUpdate()`: Aktualisiert den Status des Bösewichts am Ende jeder Runde, z.B. die Reduzierung der Bonusverteidigung.
+Die `Manipulator`-Klasse bietet spezielle Methoden:
 
-## Statik- und Companion-Objekte
+- `heldenErstellen()`: Initialisiert den Helden mit einem einzigartigen Namen und Standardattributen.
+- `angreifen(gegner: Boesewicht)`: Ermöglicht es dem Helden, einen Gegner anzugreifen, wobei verschiedene manipulative Fähigkeiten genutzt werden können.
+- `verteidigen()`: Erhöht temporär die Verteidigung des Helden.
+- `rundenUpdate()`: Aktualisiert den Status des Helden am Ende jeder Runde, z.B. die Verringerung temporärer Buffs.
+- `temporaereVerteidigungErhoehen(runden: Int)`: Erhöht die Verteidigung des Helden temporär für eine bestimmte Anzahl von Runden.
+- `aktualisiereVerteidigung()`: Aktualisiert die Verteidigungswerte des Helden, sobald temporäre Effekte abgelaufen sind.
 
-- Farbcodes werden zur Formatierung der Ausgabe in der Konsole verwendet.
-- Die `erzeugeBoesewicht()`-Methode erzeugt zufällig einen neuen Bösewicht mit vordefinierten Namen und Eigenschaften.
-- `lebenspunkteFarbe()` wird verwendet, um die Lebenspunkte visuell in Abhängigkeit von ihrem Verhältnis zu den maximalen Lebenspunkten darzustellen.
+# Schattenhelfer
 
-## Gameplay-Mechaniken
+## Beschreibung
 
-Der Bösewicht kann verschiedene Angriffe ausführen und sich verteidigen, was das Kampfsystem dynamisch und unvorhersehbar macht. Die Methoden zur Schadensberechnung und Verteidigung ermöglichen eine tiefe Integration in das Kampfsystem des Spiels.
+`Schattenhelfer` ist eine Unterstützungseinheit im Spiel, die konstanten Schaden an einem Team von Helden verursacht. Bei jedem Angriff verringert der Schattenhelfer die Lebenspunkte aller Helden im Team.
 
-## Erweiterungsmöglichkeiten
+## Funktionen
 
-- Neue Angriffs- und Verteidigungsmechanismen können hinzugefügt werden, um die Vielfalt der Bösewichte zu erhöhen.
-- Die Klasse kann erweitert werden, um spezielle Fähigkeiten oder Zaubersprüche für bestimmte Bösewichte zu implementieren.
-- Interaktionen mit Umgebungselementen oder Ereignissen im Spiel könnten weitere strategische Tiefe ins Spiel bringen.
+### angreifen(team: List<Held>)
 
-## Hinweise zur Implementierung
-
-- Die `Held`-Klasse muss so gestaltet sein, dass sie mit der `Boesewicht`-Klasse interagieren kann, insbesondere im Hinblick auf Angriffs- und Verteidigungsmethoden.
-- Anpassungen an der Lebenspunkte-Logik sollten bedacht werden, um mit speziellen Zuständen wie Lähmungen oder Buffs/Debuffs umzugehen.
-
-Die `Boesewicht`-Klasse bildet das Rückgrat der Gegnerlogik in diesem Rollenspiel und soll für eine herausfordernde Spielerfahrung sorgen.
-
-
-# Drachen-Modul
-
-Das Drachen-Modul bietet eine Implementierung eines Drachen-Gegners für ein textbasiertes Rollenspiel.
-
-## Klasse: Drache
-
-Die Klasse `Drache` erbt von der Basisklasse `Boesewicht` und implementiert einen Drachen mit individuellen Fähigkeiten und Angriffsverhalten.
-
-### Eigenschaften
-
-- `name`: Der Name des Drachens.
-- `maxLebenspunkte`: Die maximalen Lebenspunkte des Drachens, initialisiert mit 2500.
-- `lebenspunkte`: Die aktuellen Lebenspunkte des Drachens, die nicht unter 0 fallen können.
-- `angriff`: Der Angriffswert des Drachens, festgelegt auf 100.
-- `verteidigung`: Die Verteidigung des Drachens, initialisiert mit 50.
-- `geschwindigkeit`: Die Geschwindigkeit des Drachens, festgelegt auf 80.
-
-### Methoden
-
-- `erstelleDrache()`: Eine Begleiter-Funktion, die eine neue Instanz des Drachens erstellt.
-- `entscheideAktion()`: Entscheidet zufällig, ob ein normaler oder spezieller Angriff durchgeführt wird.
-- `angreifen()`: Führt einen Angriff gegen ein Team von Helden aus, indem es zwischen verschiedenen Angriffen wählt.
-- `spezialAngriff()`: Ein starker Angriff, der auf alle Mitglieder des gegnerischen Teams angewendet wird.
-- `verteidigen()`: Erhöht die Verteidigung des Drachens für die nächsten zwei Runden, falls diese nicht bereits erhöht wurde.
-
-### Spezialverhalten
-
-- Der Drache entscheidet bei jedem Angriff zufällig, ob ein normaler Angriff (`80%` Chance) oder ein spezieller Angriff (`20%` Chance) durchgeführt wird.
-- Der spezielle Angriff, die "Drachenwut", fügt jedem Helden im gegnerischen Team Schaden zu.
-- Die Verteidigung des Drachens kann temporär erhöht werden, was für zwei Runden anhält.
-
-## Integration
-
-Um den Drachen in dein Spiel zu integrieren, kannst du die Methode `erstelleDrache()` verwenden, um eine neue Instanz zu erstellen und diese dann in deinem Kampfsystem zu verwenden.
+- Diese Methode nimmt eine Liste von Helden (`team`) als Argument.
+- Jeder Held im übergebenen Team erleidet 10 Schadenspunkte.
+- Der Schaden wird direkt von den `lebenspunkte` jedes Helden abgezogen.
+- Die Methode gibt für jeden angegriffenen Helden eine Nachricht auf der Konsole aus, die den verursachten Schaden anzeigt.
