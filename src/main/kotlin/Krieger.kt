@@ -64,8 +64,16 @@ class Krieger(
         this.verteidigung = 60
 
         println(
-            "Du Krieger, trettest dem Team bei:\n" +
-                    "$nameColor$name$resetColor\n" +
+            "Siehe, ein neuer Adept betritt die Hallen von Zamnesia:\n" +
+                    "Edler $nameColor$name$resetColor, bereit deine Weisheit und Macht zum Wohle der Lande einzusetzen.\n" +
+                    "Deine Lebensessenz beläuft sich auf $valueColor$lebenspunkte$resetColor von maximalen $valueColor$maxLebenspunkte$resetColor Punkten.\n" +
+                    "Deine Angriffskraft ist ehrenwert, sie beträgt $valueColor$angriff$resetColor.\n" +
+                    "Dein magisches Geschick, oh weiser $nameColor$name$resetColor, ist unübertroffen mit einem Werte von $valueColor$magie$resetColor.\n" +
+                    "Die Stärke deiner Verteidigung wird in den Annalen verzeichnet als $valueColor$verteidigung$resetColor.\n"
+        )
+
+        println(
+            "Du$nameColor$name$resetColor trettest dem Team bei:\n" +
                     "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor\n" +
                     "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
                     "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +
@@ -74,11 +82,11 @@ class Krieger(
     }
 
     override fun angreifen(gegner: Boesewicht) {
-        println("Wähle eine Attacke:\n")
-        println("1. Klingenschwung (Angriffsbasiert)")
-        println("2. Berserkerstoß (Stärkerer Angriff, weniger präzise)")
-        println("3. Schildschlag (Nutzt Verteidigungswert)\n")
-        print("Deine Wahl: ")
+        println("Wähle deine Kampfhandlung:\n")
+        println("1. Schwertwirbel (Angriffsbasiert)")
+        println("2. Berserkerschlag (Erhöhter Angriff, geringere Genauigkeit)")
+        println("3. Schildhieb (Nutzt den Verteidigungswert)\n")
+        print("Deine Entscheidung: ")
 
         when (readln()) {
             "1" -> {
@@ -130,7 +138,7 @@ class Krieger(
         if (bonusRundenVerteidigung == 0) {
             urspruenglicheVerteidigung = verteidigung
             verteidigung = (verteidigung * 1.2).toInt()
-            println("Der Effekt der Vitamine beginnt! Verteidigung um 20% erhöht.")
+            println("Wie durch einen geheimnisvollen Zaubertrank, fühlt sich $name plötzlich widerstandsfähiger. Die Verteidigung steigt um 20%!")
         }
         bonusRundenVerteidigung = runden
     }
@@ -140,7 +148,7 @@ class Krieger(
             bonusRundenVerteidigung--
             if (bonusRundenVerteidigung == 0) {
                 verteidigung = urspruenglicheVerteidigung
-                println("Der Effekt der Vitamine ist vorbei. Verteidigung wird zurückgesetzt.")
+                println("Der Zauber der Verteidigung schwindet, und $name fühlt, wie die alte Stärke zurückkehrt.")
             }
         }
     }

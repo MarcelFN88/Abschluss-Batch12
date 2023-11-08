@@ -65,8 +65,17 @@ class Magier(
         this.magie = 75
         this.verteidigung = 60
 
-        println(    "Du Magier, trettest dem Team bei:\n" +
-                    "$nameColor$name$resetColor\n" +
+        println(
+            "Siehe, ein neuer Adept betritt die Hallen von Zamnesia:\n" +
+                    "Edler $nameColor$name$resetColor, bereit deine Weisheit und Macht zum Wohle der Lande einzusetzen.\n" +
+                    "Deine Lebensessenz beläuft sich auf $valueColor$lebenspunkte$resetColor von maximalen $valueColor$maxLebenspunkte$resetColor Punkten.\n" +
+                    "Deine Angriffskraft ist ehrenwert, sie beträgt $valueColor$angriff$resetColor.\n" +
+                    "Dein magisches Geschick, oh weiser $nameColor$name$resetColor, ist unübertroffen mit einem Werte von $valueColor$magie$resetColor.\n" +
+                    "Die Stärke deiner Verteidigung wird in den Annalen verzeichnet als $valueColor$verteidigung$resetColor.\n"
+        )
+
+        println(
+                    "Du$nameColor$name$resetColor trettest dem Team bei:\n" +
                     "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor\n" +
                     "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
                     "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +
@@ -74,34 +83,34 @@ class Magier(
         )
     }
     override fun angreifen(gegner: Boesewicht) {
-        println("Wähle einen magischen Angriff:\n")
-        println("1. Feuerball (Magie-basiert)")
-        println("2. Eissturm (Höherer Schaden, kann sich selbst verletzen)")
-        println("3. Blitzschlag (Magie-basiert)\n")
-        print("Deine Wahl: ")
+        println("Erhebt euch, ihr mystischen Kräfte, und wählet einen Zauber:\n")
+        println("1. Feuerball – Ein Geschoss geformt aus den Flammen der alten Welt.")
+        println("2. Eissturm – Ein tobender Sturm, geboren aus dem Atem des Frostes.")
+        println("3. Blitzschlag – Ein zorniger Fingerzeig der Himmelsgötter.\n")
+        print("Welcher Pfad soll beschritten werden? Eure Entscheidung, Magier: ")
 
         when (readln()) {
             "1" -> {
                 val schaden = berechneSchaden(magie, 30)
                 gegner.lebenspunkte -= schaden
-                println("$name verursacht $schaden Schaden mit einem Feuerball.\n")
+                println("$name, du hast einen Feuerball beschworen, der $schaden Schaden verursacht hat. Die Feinde zittern vor Furcht.\n")
             }
 
             "2" -> {
                 val schaden = berechneSchaden(magie, 50)
                 gegner.lebenspunkte -= schaden
-                println("$name entfesselt einen Eissturm und verursacht $schaden Schaden.\n")
+                println("$name hat mit einem mächtigen Eissturm $schaden Schaden angerichtet. Doch ach, die Kräfte des Frostes sind tückisch!\n")
                 if (Random.nextInt(100) < 10) {
                     val selbstschaden = schaden * 10 / 100
                     this.lebenspunkte -= selbstschaden
-                    println("$name hat sich selbst mit $selbstschaden Schaden verletzt.\n")
+                    println("Durch die Unberechenbarkeit des Eises hast du $selbstschaden Schaden an dir selbst verursacht. Vorsicht ist geboten, auch im Siegesrausch.\n")
                 }
             }
 
             "3" -> {
                 val schaden = berechneSchaden(magie, 40)
                 gegner.lebenspunkte -= schaden
-                println("$name trifft mit einem Blitzschlag und verursacht $schaden Schaden.\n")
+                println("$name, durch deine Hand wurde ein Blitzschlag herabgerufen, der $schaden Schaden verursachte. Deine Feinde weichen zurück vor dem donnernden Zorn.\n")
 
             }
 
@@ -118,7 +127,7 @@ class Magier(
             val verteidigungsBonus = 20
             urspruenglicheVerteidigung = verteidigung
             verteidigung += verteidigungsBonus
-            println("$nameColor$name$resetColor erhöht die Verteidigung um $verteidigungsBonus.")
+            println("$name hat die Verteidigung um $verteidigungsBonus erhöht. Die Schutzzauber weben sich fester um deine Gestalt.\n")
         }
         bonusRundenVerteidigung = 2
     }
@@ -128,7 +137,7 @@ class Magier(
             bonusRundenVerteidigung--
             if (bonusRundenVerteidigung == 0) {
                 verteidigung = urspruenglicheVerteidigung
-                println("$nameColor$name$resetColor Verteidigungsbonus ist ausgelaufen.")
+                println("Die verstärkten Schutzzauber, die $name umhüllten, beginnen zu schwinden. Bereite dich vor auf kommende Prüfungen.\n")
             }
         }
     }
@@ -136,7 +145,7 @@ class Magier(
         if (bonusRundenVerteidigung == 0) {
             urspruenglicheVerteidigung = verteidigung
             verteidigung = (verteidigung * 1.2).toInt()
-            println("Der Effekt der Vitamine beginnt! Verteidigung um 20% erhöht.")
+            println("Wie durch einen geheimnisvollen Zaubertrank, fühlt sich $name plötzlich widerstandsfähiger. Die Verteidigung steigt um 20%!")
         }
         bonusRundenVerteidigung = runden
     }
@@ -146,7 +155,7 @@ class Magier(
             bonusRundenVerteidigung--
             if (bonusRundenVerteidigung == 0) {
                 verteidigung = urspruenglicheVerteidigung
-                println("Der Effekt der Vitamine ist vorbei. Verteidigung wird zurückgesetzt.")
+                println("Der Zauber der Verteidigung schwindet, und $name fühlt, wie die alte Stärke zurückkehrt.")
             }
         }
     }

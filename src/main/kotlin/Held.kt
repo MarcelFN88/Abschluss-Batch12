@@ -19,7 +19,7 @@ open class Held(
         if (bonusRundenVerteidigung == 0) {
             urspruenglicheVerteidigung = verteidigung
             verteidigung = (verteidigung * 1.2).toInt()
-            println("Der Effekt der Vitamine beginnt! Verteidigung um 20% erhöht.")
+            println("Wie durch einen geheimnisvollen Zaubertrank, fühlt sich $name plötzlich widerstandsfähiger. Die Verteidigung steigt um 20%!")
         }
         bonusRundenVerteidigung = runden
     }
@@ -29,7 +29,7 @@ open class Held(
             bonusRundenVerteidigung--
             if (bonusRundenVerteidigung == 0) {
                 verteidigung = urspruenglicheVerteidigung
-                println("Der Effekt der Vitamine ist vorbei. Verteidigung wird zurückgesetzt.")
+                println("Der Zauber der Verteidigung schwindet, und $name fühlt, wie die alte Stärke zurückkehrt.")
             }
         }
     }
@@ -159,6 +159,7 @@ open class Held(
         val (vorname, nachnamen) = namenMap.entries.shuffled().first()
         val nachname = nachnamen.shuffled().first()
         this.name = "$vorname $nachname"
+
         val geschichte = """
 In den alten Zeiten von Zamnesia, einer Welt voller Magie und uralter Mysterien,
 erhob sich ein Held aus dem Schatten der Legenden, um das Schicksal der Reiche zu formen.
@@ -203,11 +204,11 @@ bevorstehenden Abenteuer vorbereitet.
         var weiterTraining = true
 
         while (weiterTraining) {
-            println("Wähle eine Fähigkeit zum Trainieren:\n")
-            println("1. Angriff")
-            println("2. Magie")
-            println("3. Verteidigung\n")
-            print("Deine Wahl: \n")
+            println("Vor dir stehen drei uralte Statuen, jede verkörpert eine Fertigkeit: Angriff, Magie und Verteidigung. Welche Fähigkeit möchtest du meistern?\n")
+            println("1. Angriff - Die Statue des kühnen Kriegers")
+            println("2. Magie - Die Statue der weisen Zauberin")
+            println("3. Verteidigung - Die Statue des unbeugsamen Wächters\n")
+            print("Dein Herz spricht zu dir, wähle weise: \n")
 
             when (readln()) {
                 "1" -> {
@@ -251,11 +252,11 @@ bevorstehenden Abenteuer vorbereitet.
     }
 
     open fun angreifen(gegner: Boesewicht) {
-        println("Wähle eine Attacke:\n")
-        println("1. Schwertstreich (Angriffs basierend)")
-        println("2. Feuerball (Magie basierend)")
-        println("3. Donnerschlag (Angriffs basierend)\n")
-        print("Deine Wahl: ")
+        println("Die Luft knistert vor Spannung, während $name aus dem Repertoire alter Kampfkünste wählt:\n")
+        println("1. Schwertstreich - Ein heldenhafter Hieb, geboren aus unzähligen Schlachten")
+        println("2. Feuerball - Eine glühende Kugel der Zerstörung, gewoben aus den Flammen des Zorns")
+        println("3. Donnerschlag - Ein Schlag so gewaltig, dass selbst die Götter innehalten\n")
+        print("Wähle die Essenz deiner Macht: ")
 
         when (readln()) {
             "1" -> {
@@ -305,3 +306,4 @@ bevorstehenden Abenteuer vorbereitet.
     }
 
 }
+
