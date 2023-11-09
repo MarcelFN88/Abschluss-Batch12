@@ -1,3 +1,7 @@
+package Items
+
+import GuteSeite.Held
+
 class Beutel {
     private var heiltraenke = 3
     private var vitamine = 7
@@ -7,7 +11,7 @@ class Beutel {
             val heilung = (held.maxLebenspunkte * 0.3).toInt()
             held.lebenspunkte = minOf(held.lebenspunkte + heilung, held.maxLebenspunkte)
             heiltraenke--
-            println("Der Held hat einen Heiltrank benutzt und $heilung Lebenspunkte wiederhergestellt.")
+            println("Der GuteSeite.Held hat einen Heiltrank benutzt und $heilung Lebenspunkte wiederhergestellt.")
         } else {
             println("Du hast keine Heiltränke mehr!")
         }
@@ -17,20 +21,20 @@ class Beutel {
         if (vitamine > 0) {
             held.temporaereVerteidigungErhoehen(3)
             vitamine--
-            println("Der Held hat Vitamine benutzt und die Verteidigung wird für die nächsten 3 Runden um 20% erhöht.\n")
+            println("Der GuteSeite.Held hat Vitamine benutzt und die Verteidigung wird für die nächsten 3 Runden um 20% erhöht.\n")
         } else {
             println("Du hast keine Vitamine mehr!")
         }
     }
 
     fun zeigeInventar() {
-        println("Beutel-Inventar:\n ")
+        println("Items.Beutel-Inventar:\n ")
         println("Heiltränke: $heiltraenke")
         println("Vitamine: $vitamine\n")
     }
 
     fun waehleUndBenutze(held: Held) {
-        println("Wähle einen Gegenstand aus deinem Beutel:\n")
+        println("Wähle einen Gegenstand aus deinem Items.Beutel:\n")
         println("1. Heiltrank (Heilt 30% deiner max. LP)")
         println("2. Vitamine (Steigert Verteidigung um 20% für 3 Runden)\n")
         println("Deine Wahl: \n")

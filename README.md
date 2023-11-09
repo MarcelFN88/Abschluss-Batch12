@@ -30,11 +30,11 @@ Abhängig von der Wahl des Spielers werden unterschiedliche Aktionen durchgefüh
 
 ## Kämpfen
 
-Im Kampf kann der Held:
+Im Kampf kann der GuteSeite.Held:
 
 - Angreifen
 - Verteidigen
-- Gegenstände aus dem Beutel verwenden
+- Gegenstände aus dem Items.Beutel verwenden
 
 Die Kämpfe sind rundenbasiert, und der Fortschritt des Spielers wird durch die Anzahl der Siege und Niederlagen festgehalten.
 
@@ -48,41 +48,41 @@ Zum Spielen das Spiel ausführen und den Anweisungen in der Konsole folgen. Es w
 
 
 
-Das Beutel-Verwaltungssystem ist eine einfache Klasse, die in Rollenspielen eingesetzt werden kann, um das Inventar eines Helden zu verwalten. Es ermöglicht dem Helden, Heiltränke und Vitamine zu verwenden und zu verwalten.
-# Beutel-Verwaltungssystem
+Das Items.Beutel-Verwaltungssystem ist eine einfache Klasse, die in Rollenspielen eingesetzt werden kann, um das Inventar eines Helden zu verwalten. Es ermöglicht dem Helden, Heiltränke und Vitamine zu verwenden und zu verwalten.
+# Items.Beutel-Verwaltungssystem
 
 
 ## Funktionen
 
 ### Heiltrank verwenden
 
-- Ein Held kann einen Heiltrank aus seinem Beutel verwenden, um seine Lebenspunkte um 30% seiner maximalen Lebenspunkte zu heilen.
-- Es kann nur verwendet werden, wenn der Held noch Heiltränke in seinem Beutel hat.
+- Ein GuteSeite.Held kann einen Heiltrank aus seinem Items.Beutel verwenden, um seine Lebenspunkte um 30% seiner maximalen Lebenspunkte zu heilen.
+- Es kann nur verwendet werden, wenn der GuteSeite.Held noch Heiltränke in seinem Items.Beutel hat.
 
 ### Vitamine verwenden
 
-- Ein Held kann Vitamine verwenden, um seine temporäre Verteidigung für die nächsten 3 Runden um 20% zu erhöhen.
-- Es kann nur verwendet werden, wenn der Held noch Vitamine in seinem Beutel hat.
+- Ein GuteSeite.Held kann Vitamine verwenden, um seine temporäre Verteidigung für die nächsten 3 Runden um 20% zu erhöhen.
+- Es kann nur verwendet werden, wenn der GuteSeite.Held noch Vitamine in seinem Items.Beutel hat.
 
 ### Inventar anzeigen
 
-- Zeigt die Anzahl der Heiltränke und Vitamine im Beutel des Helden an.
+- Zeigt die Anzahl der Heiltränke und Vitamine im Items.Beutel des Helden an.
 
 ### Gegenstand verwenden
 
-- Ermöglicht dem Spieler, einen Gegenstand aus dem Beutel zu wählen und zu verwenden.
+- Ermöglicht dem Spieler, einen Gegenstand aus dem Items.Beutel zu wählen und zu verwenden.
 - Der Spieler muss zwischen "1" für Heiltrank und "2" für Vitamine wählen, ansonsten verliert der Spieler die Aktion.
 
 ### Gegenstand hinzufügen
 
-- Fügt einen Heiltrank oder Vitamine zum Beutel hinzu, wenn der entsprechende Gegenstand gewählt wird.
+- Fügt einen Heiltrank oder Vitamine zum Items.Beutel hinzu, wenn der entsprechende Gegenstand gewählt wird.
 
 
 
 
-## Klasse: Boesewicht
+## Klasse: BoeseSeite.Boesewicht
 
-Die `Boesewicht`-Klasse ist eine offene Klasse, die erweitert werden kann, um verschiedene Arten von Bösewichten zu erstellen. Sie verfügt über Attribute zur Verwaltung von Lebenspunkten, Angriff, Magie und Verteidigung.
+Die `BoeseSeite.Boesewicht`-Klasse ist eine offene Klasse, die erweitert werden kann, um verschiedene Arten von Bösewichten zu erstellen. Sie verfügt über Attribute zur Verwaltung von Lebenspunkten, Angriff, Magie und Verteidigung.
 
 ### Eigenschaften
 
@@ -96,37 +96,37 @@ Die `Boesewicht`-Klasse ist eine offene Klasse, die erweitert werden kann, um ve
 ### Methoden
 
 - `druckeEigenschaften()`: Druckt die Eigenschaften des Bösewichts aus.
-- `angreifen(gegner: Held)`: Führt einen Angriff gegen einen Helden aus.
+- `angreifen(gegner: GuteSeite.Held)`: Führt einen Angriff gegen einen Helden aus.
 - `berechneSchaden(basisSchaden: Int, wert: Int)`: Berechnet den Schaden basierend auf dem Basis-Schaden und dem Angriffs- oder Magiewert.
 - `erleideSchaden(schaden: Int)`: Reduziert die Lebenspunkte des Bösewichts, wenn Schaden erlitten wird.
 - `verteidigen()`: Erhöht die Verteidigung für eine bestimmte Anzahl von Runden.
 - `rundenUpdate()`: Aktualisiert den Zustand nach jeder Runde.
 
 
-# Drache-Klasse
+# BoeseSeite.Drache-Klasse
 
 ## Beschreibung
-Die `Drache`-Klasse ist eine spezialisierte Implementierung eines Bösewichts in einem Spiel, das Rollenspielelemente enthält. Diese Klasse erbt von der `Boesewicht`-Basisklasse und fügt spezifische Merkmale und Verhaltensweisen eines Drachens hinzu, wie spezielle Angriffe und Verteidigungsmechanismen.
+Die `BoeseSeite.Drache`-Klasse ist eine spezialisierte Implementierung eines Bösewichts in einem Spiel, das Rollenspielelemente enthält. Diese Klasse erbt von der `BoeseSeite.Boesewicht`-Basisklasse und fügt spezifische Merkmale und Verhaltensweisen eines Drachens hinzu, wie spezielle Angriffe und Verteidigungsmechanismen.
 
 ## Features
-- **Erstellung eines Drachen:** Die Klasse bietet eine `companion object`-Factory-Methode `erstelleDrache`, die eine Instanz von `Drache` mit einem vordefinierten Namen erstellt.
-- **Angriffsentscheidung:** Der Drache kann zwischen normalen und speziellen Angriffen wählen.
-- **Spezialangriff:** Der Drache kann einen mächtigen Flächenangriff ausführen, der alle Helden im Team trifft.
-- **Verteidigung:** Der Drache kann seine Verteidigung mit einem Bonus für eine bestimmte Anzahl von Runden erhöhen.
+- **Erstellung eines Drachen:** Die Klasse bietet eine `companion object`-Factory-Methode `erstelleDrache`, die eine Instanz von `BoeseSeite.Drache` mit einem vordefinierten Namen erstellt.
+- **Angriffsentscheidung:** Der BoeseSeite.Drache kann zwischen normalen und speziellen Angriffen wählen.
+- **Spezialangriff:** Der BoeseSeite.Drache kann einen mächtigen Flächenangriff ausführen, der alle Helden im Team trifft.
+- **Verteidigung:** Der BoeseSeite.Drache kann seine Verteidigung mit einem Bonus für eine bestimmte Anzahl von Runden erhöhen.
 
 
-# Dunkler Magier Klasse
+# Dunkler GuteSeite.Magier Klasse
 
-Die `DunklerMagier`-Klasse ist eine spezialisierte Unterklasse von `Boesewicht`, die in einem Fantasy-Rollenspiel verwendet wird. Ein `DunklerMagier` ist ein mächtiger Gegner, der spezielle magische Angriffe und Verteidigungsfähigkeiten besitzt.
+Die `BoeseSeite.DunklerMagier`-Klasse ist eine spezialisierte Unterklasse von `BoeseSeite.Boesewicht`, die in einem Fantasy-Rollenspiel verwendet wird. Ein `BoeseSeite.DunklerMagier` ist ein mächtiger Gegner, der spezielle magische Angriffe und Verteidigungsfähigkeiten besitzt.
 
 ## Features
 
-- **Magischer Schild:** Der `DunklerMagier` kann einen magischen Schild aktivieren, der zusätzlichen Schutz bietet.
-- **Spezialangriff:** Zusätzlich zu normalen magischen Angriffen kann der `DunklerMagier` einen mächtigen speziellen Angriff ausführen, der das gesamte Helden-Team betrifft.
-- **Aktionen Entscheiden:** Der `DunklerMagier` kann strategisch zwischen normalen und speziellen Angriffen basierend auf einer Zufallsentscheidung wählen.
+- **Magischer Schild:** Der `BoeseSeite.DunklerMagier` kann einen magischen Schild aktivieren, der zusätzlichen Schutz bietet.
+- **Spezialangriff:** Zusätzlich zu normalen magischen Angriffen kann der `BoeseSeite.DunklerMagier` einen mächtigen speziellen Angriff ausführen, der das gesamte Helden-Team betrifft.
+- **Aktionen Entscheiden:** Der `BoeseSeite.DunklerMagier` kann strategisch zwischen normalen und speziellen Angriffen basierend auf einer Zufallsentscheidung wählen.
 
 ## Klassen
-- `Held`: Die Basisklasse für Helden-Objekte mit Eigenschaften wie Name, Lebenspunkte, Angriff, Magie und Verteidigung.
+- `GuteSeite.Held`: Die Basisklasse für Helden-Objekte mit Eigenschaften wie Name, Lebenspunkte, Angriff, Magie und Verteidigung.
 
 ## Funktionen
 - `temporaereVerteidigungErhoehen(int runden)`: Erhöht temporär die Verteidigung des Helden.
@@ -138,7 +138,7 @@ Die `DunklerMagier`-Klasse ist eine spezialisierte Unterklasse von `Boesewicht`,
 - `heldenErstellen()`: Erzeugt einen Helden mit zufälligem Namen und Eigenschaften.
 - `training()`: Ermöglicht es dem Helden, seine Fähigkeiten zu trainieren.
 - `zeigeStatus()`: Zeigt den aktuellen Status des Helden an.
-- `angreifen(Boesewicht gegner)`: Stellt den Angriff auf einen Bösewicht dar.
+- `angreifen(BoeseSeite.Boesewicht gegner)`: Stellt den Angriff auf einen Bösewicht dar.
 
 ## Start des Spiels
 Um das Spiel zu starten, kann die Methode `erzeugeUndInitialisiereHelden()` verwendet werden, um einen neuen Helden zu erzeugen und mit dem Spiel zu beginnen.
@@ -151,23 +151,23 @@ Spieler können ihre Fähigkeiten verbessern, indem sie die Methode `training()`
 
 
 
-# Krieger Klasse
+# GuteSeite.Krieger Klasse
 
-Die `Krieger`-Klasse ist eine Erweiterung der `Held`-Klasse und repräsentiert einen mutigen und starken Krieger in einem Fantasy-Rollenspiel.
+Die `GuteSeite.Krieger`-Klasse ist eine Erweiterung der `GuteSeite.Held`-Klasse und repräsentiert einen mutigen und starken GuteSeite.Krieger in einem Fantasy-Rollenspiel.
 
 ## Eigenschaften
 
 - `name`: Der Name des Kriegers, welcher aus einer Liste von heroischen Titeln und Vornamen generiert wird.
 - `lebenspunkte`: Die aktuellen Gesundheitspunkte des Kriegers.
-- `maxLebenspunkte`: Die maximalen Gesundheitspunkte, die der Krieger haben kann.
+- `maxLebenspunkte`: Die maximalen Gesundheitspunkte, die der GuteSeite.Krieger haben kann.
 - `angriff`: Die Angriffskraft des Kriegers, die in Kampfhandlungen verwendet wird.
 - `magie`: Der magische Wert des Kriegers, der seine magischen Fähigkeiten widerspiegelt.
 - `verteidigung`: Die Fähigkeit des Kriegers, eingehenden Schaden zu reduzieren.
 
 ## Methoden
 
-- `heldenErstellen()`: Generiert einen neuen Krieger mit einem einzigartigen Namen und setzt alle Attribute auf Standardwerte für den Beginn des Spiels.
-- `angreifen(gegner: Boesewicht)`: Ermöglicht es dem Krieger, einen Gegner anzugreifen und Schaden zu verursachen.
+- `heldenErstellen()`: Generiert einen neuen GuteSeite.Krieger mit einem einzigartigen Namen und setzt alle Attribute auf Standardwerte für den Beginn des Spiels.
+- `angreifen(gegner: BoeseSeite.Boesewicht)`: Ermöglicht es dem GuteSeite.Krieger, einen Gegner anzugreifen und Schaden zu verursachen.
 - `berechneSchaden(basisSchaden: Int, wert: Int)`: Berechnet den Schaden basierend auf dem Basiswert und einem Angriffs- oder Verteidigungswert.
 - `verteidigen()`: Erhöht temporär die Verteidigung des Kriegers, wenn er sich verteidigt.
 - `rundenUpdate()`: Aktualisiert den Status des Kriegers am Ende jeder Runde.
@@ -175,13 +175,13 @@ Die `Krieger`-Klasse ist eine Erweiterung der `Held`-Klasse und repräsentiert e
 - `aktualisiereVerteidigung()`: Aktualisiert die Verteidigung des Kriegers nach dem Auslaufen des temporären Verteidigungsbuffs.
 
 
-# Magier Klasse
+# GuteSeite.Magier Klasse
 
-Dieses Repository enthält eine Implementierung einer `Magier`-Klasse in Kotlin, die von der abstrakten Klasse `Held` erbt. Der `Magier` ist eine spezialisierte Charakterklasse mit Fähigkeiten für magische Angriffe und Verteidigung.
+Dieses Repository enthält eine Implementierung einer `GuteSeite.Magier`-Klasse in Kotlin, die von der abstrakten Klasse `GuteSeite.Held` erbt. Der `GuteSeite.Magier` ist eine spezialisierte Charakterklasse mit Fähigkeiten für magische Angriffe und Verteidigung.
 
 ## Funktionalitäten
 
-- Erstellung eines Magier-Helden mit einem zufälligen Namen und speziellen Titeln.
+- Erstellung eines GuteSeite.Magier-Helden mit einem zufälligen Namen und speziellen Titeln.
 - Möglichkeit, einen Gegner mit verschiedenen magischen Angriffen anzugreifen.
 - Verteidigung verstärken durch Schutzzauber.
 - Rundenbasiertes Update für temporäre Verteidigung.
@@ -189,7 +189,7 @@ Dieses Repository enthält eine Implementierung einer `Magier`-Klasse in Kotlin,
 ## Methoden
 
 - `heldenErstellen()`: Erstellt einen neuen Helden mit vordefinierten Werten für Lebenspunkte, Angriff, Magie und Verteidigung.
-- `angreifen(gegner: Boesewicht)`: Führt einen Angriff auf den Gegner aus und berechnet den verursachten Schaden basierend auf der gewählten magischen Attacke.
+- `angreifen(gegner: BoeseSeite.Boesewicht)`: Führt einen Angriff auf den Gegner aus und berechnet den verursachten Schaden basierend auf der gewählten magischen Attacke.
 - `verteidigen()`: Verstärkt die Verteidigung des Magiers temporär.
 - `rundenUpdate()`: Aktualisiert die Verteidigungsboni und -effekte nach jeder Runde.
 - `temporaereVerteidigungErhoehen(runden: Int)`: Erhöht die Verteidigung temporär für eine bestimmte Anzahl von Runden.
@@ -197,13 +197,13 @@ Dieses Repository enthält eine Implementierung einer `Magier`-Klasse in Kotlin,
 
 
 
-# Helden-Manipulator
+# Helden-GuteSeite.Manipulator
 
-Der `Manipulator` ist eine spezialisierte Klasse in einem fiktiven Spiel, welche die Fähigkeiten und Charakteristika eines spielbaren Helden definiert. Diese Klasse erweitert die Basisklasse `Held` und bietet maßgeschneiderte Funktionalitäten für Charaktere, die auf Manipulation und Kontrolle spezialisiert sind.
+Der `GuteSeite.Manipulator` ist eine spezialisierte Klasse in einem fiktiven Spiel, welche die Fähigkeiten und Charakteristika eines spielbaren Helden definiert. Diese Klasse erweitert die Basisklasse `GuteSeite.Held` und bietet maßgeschneiderte Funktionalitäten für Charaktere, die auf Manipulation und Kontrolle spezialisiert sind.
 
 ## Eigenschaften
 
-Die `Manipulator`-Klasse hat folgende Eigenschaften:
+Die `GuteSeite.Manipulator`-Klasse hat folgende Eigenschaften:
 
 - `name`: Der Name des Helden.
 - `lebenspunkte`: Die aktuellen Lebenspunkte des Helden.
@@ -214,26 +214,26 @@ Die `Manipulator`-Klasse hat folgende Eigenschaften:
 
 ## Methoden
 
-Die `Manipulator`-Klasse bietet spezielle Methoden:
+Die `GuteSeite.Manipulator`-Klasse bietet spezielle Methoden:
 
 - `heldenErstellen()`: Initialisiert den Helden mit einem einzigartigen Namen und Standardattributen.
-- `angreifen(gegner: Boesewicht)`: Ermöglicht es dem Helden, einen Gegner anzugreifen, wobei verschiedene manipulative Fähigkeiten genutzt werden können.
+- `angreifen(gegner: BoeseSeite.Boesewicht)`: Ermöglicht es dem Helden, einen Gegner anzugreifen, wobei verschiedene manipulative Fähigkeiten genutzt werden können.
 - `verteidigen()`: Erhöht temporär die Verteidigung des Helden.
 - `rundenUpdate()`: Aktualisiert den Status des Helden am Ende jeder Runde, z.B. die Verringerung temporärer Buffs.
 - `temporaereVerteidigungErhoehen(runden: Int)`: Erhöht die Verteidigung des Helden temporär für eine bestimmte Anzahl von Runden.
 - `aktualisiereVerteidigung()`: Aktualisiert die Verteidigungswerte des Helden, sobald temporäre Effekte abgelaufen sind.
 
-# Schattenhelfer
+# BoeseSeite.Schattenhelfer
 
 ## Beschreibung
 
-`Schattenhelfer` ist eine Unterstützungseinheit im Spiel, die konstanten Schaden an einem Team von Helden verursacht. Bei jedem Angriff verringert der Schattenhelfer die Lebenspunkte aller Helden im Team.
+`BoeseSeite.Schattenhelfer` ist eine Unterstützungseinheit im Spiel, die konstanten Schaden an einem Team von Helden verursacht. Bei jedem Angriff verringert der BoeseSeite.Schattenhelfer die Lebenspunkte aller Helden im Team.
 
 ## Funktionen
 
-### angreifen(team: List<Held>)
+### angreifen(team: List<GuteSeite.Held>)
 
 - Diese Methode nimmt eine Liste von Helden (`team`) als Argument.
-- Jeder Held im übergebenen Team erleidet 10 Schadenspunkte.
+- Jeder GuteSeite.Held im übergebenen Team erleidet 10 Schadenspunkte.
 - Der Schaden wird direkt von den `lebenspunkte` jedes Helden abgezogen.
 - Die Methode gibt für jeden angegriffenen Helden eine Nachricht auf der Konsole aus, die den verursachten Schaden anzeigt.

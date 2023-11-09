@@ -1,3 +1,6 @@
+package BoeseSeite
+
+import GuteSeite.Held
 import kotlin.random.Random
 
 class Drache(

@@ -1,3 +1,6 @@
+package BoeseSeite
+
+import GuteSeite.Held
 import kotlin.random.Random
 
 open class Boesewicht(
@@ -57,10 +60,10 @@ open class Boesewicht(
 
     fun druckeEigenschaften() {
         println("$nameColor$name$resetColor")
-        println("${labelColor}Lebenspunkte:$resetColor ${valueColor}$lebenspunkte/$maxLebenspunkte$resetColor")
-        println("${labelColor}Angriff:$resetColor ${valueColor}$angriff$resetColor")
-        println("${labelColor}Magie:$resetColor ${valueColor}$magie$resetColor")
-        println("${labelColor}Verteidigung:$resetColor ${valueColor}$verteidigung$resetColor\n")
+        println("${labelColor}Lebenspunkte:$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor")
+        println("${labelColor}Angriff:$resetColor $valueColor$angriff$resetColor")
+        println("${labelColor}Magie:$resetColor $valueColor$magie$resetColor")
+        println("${labelColor}Verteidigung:$resetColor $valueColor$verteidigung$resetColor\n")
         println("Der Bösewicht $nameColor$name$resetColor steht bereit, um Unheil über die Welt zu bringen!\n")
     }
     fun angreifen(gegner: Held) {

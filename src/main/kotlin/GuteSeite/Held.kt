@@ -1,3 +1,7 @@
+package GuteSeite
+
+import BoeseSeite.Boesewicht
+import Funktionen.playSound
 import java.io.IOException
 import java.io.File
 
@@ -142,17 +146,17 @@ open class Held(
 
     open fun heldenErstellen() {
         val namenMap = mapOf(
-            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "Magier von Mythria"),
+            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "GuteSeite.Magier von Mythria"),
             "Lyrana" to listOf("Sternentänzerin", "Priesterin von Silberwald", "Botin der Sterne"),
-            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "Krieger der Tiefe"),
+            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "GuteSeite.Krieger der Tiefe"),
             "Elara" to listOf("Mondjägerin", "Waldgeister-Hüterin", "Bogenschützin von Elmswood"),
             "Draken" to listOf("Feuerseele", "Drachentöter", "Beschützer der Berge"),
             "Seraphel" to listOf("Windflüsterin", "Hohepriesterin der Wolken", "Göttin der Lüfte"),
-            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "Krieger des Abgrunds"),
+            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "GuteSeite.Krieger des Abgrunds"),
             "Illyria" to listOf("Wasserwächterin", "Meeresprinzessin", "Herrin der Wellen"),
             "Orynn" to listOf("Steinhaut", "Bergbewahrer", "Zerstörer von Fels"),
             "Azura" to listOf("Himmelsbotin", "Göttin des Zwielichts", "Wächterin des Morgenrots"),
-            "Keldorn" to listOf("Sturmbringer", "Held von Mythria's Grenzen", "Vagabund des Westens"),
+            "Keldorn" to listOf("Sturmbringer", "GuteSeite.Held von Mythria's Grenzen", "Vagabund des Westens"),
             "Nylara" to listOf("Schattenweberin", "Herrin der Nacht", "Mondpriesterin")
         )
 
@@ -162,8 +166,8 @@ open class Held(
 
         val geschichte = """
 In den alten Zeiten von Zamnesia, einer Welt voller Magie und uralter Mysterien,
-erhob sich ein Held aus dem Schatten der Legenden, um das Schicksal der Reiche zu formen.
-Dieser Held, bekannt unter vielen Namen und Titeln durch die Ären, sollte bald sein eigenes Vermächtnis erschaffen.
+erhob sich ein GuteSeite.Held aus dem Schatten der Legenden, um das Schicksal der Reiche zu formen.
+Dieser GuteSeite.Held, bekannt unter vielen Namen und Titeln durch die Ären, sollte bald sein eigenes Vermächtnis erschaffen.
 
 $nameColor${name.split(" ").first()}$resetColor, dessen wahre Herkunft in den Sternen geschrieben steht,
 ist bestimmt, durch große Taten in die Annalen von Zamnesia einzugehen. Vor ihm liegt ein Weg

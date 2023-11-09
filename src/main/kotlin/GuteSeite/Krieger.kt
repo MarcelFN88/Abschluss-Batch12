@@ -1,4 +1,8 @@
-class Manipulator(
+package GuteSeite
+
+import BoeseSeite.Boesewicht
+
+class Krieger(
     name: String = "",
     lebenspunkte: Int = 0,
     maxLebenspunkte: Int = 0,
@@ -18,17 +22,17 @@ class Manipulator(
 
     override fun heldenErstellen() {
         val namenMap = mapOf(
-            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "Magier von Mythria"),
+            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "GuteSeite.Magier von Mythria"),
             "Lyrana" to listOf("Sternentänzerin", "Priesterin von Silberwald", "Botin der Sterne"),
-            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "Krieger der Tiefe"),
+            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "GuteSeite.Krieger der Tiefe"),
             "Elara" to listOf("Mondjägerin", "Waldgeister-Hüterin", "Bogenschützin von Elmswood"),
             "Draken" to listOf("Feuerseele", "Drachentöter", "Beschützer der Berge"),
             "Seraphel" to listOf("Windflüsterin", "Hohepriesterin der Wolken", "Göttin der Lüfte"),
-            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "Krieger des Abgrunds"),
+            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "GuteSeite.Krieger des Abgrunds"),
             "Illyria" to listOf("Wasserwächterin", "Meeresprinzessin", "Herrin der Wellen"),
             "Orynn" to listOf("Steinhaut", "Bergbewahrer", "Zerstörer von Fels"),
             "Azura" to listOf("Himmelsbotin", "Göttin des Zwielichts", "Wächterin des Morgenrots"),
-            "Keldorn" to listOf("Sturmbringer", "Held von Mythria's Grenzen", "Vagabund des Westens"),
+            "Keldorn" to listOf("Sturmbringer", "GuteSeite.Held von Mythria's Grenzen", "Vagabund des Westens"),
             "Nylara" to listOf("Schattenweberin", "Herrin der Nacht", "Mondpriesterin"),
             "Aleris" to listOf("der Wächter", "Geist des Waldes", "Meister des Bogens"),
             "Brenna" to listOf("die Flammenweberin", "Beschwörerin des Feuers", "Hüterin der Asche"),
@@ -59,57 +63,52 @@ class Manipulator(
 
         this.lebenspunkte = 2000
         this.maxLebenspunkte = 2000
-        this.angriff = 65
-        this.magie = 65
-        this.verteidigung = 65
+        this.angriff = 75
+        this.magie = 60
+        this.verteidigung = 60
 
         println(
             "Siehe, ein neuer Adept betritt die Hallen von Zamnesia:\n" +
-                    "Edler $nameColor$name$resetColor, bereit deine Weisheit und Macht zum Wohle der Lande einzusetzen.\n" +
-                    "Deine Lebensessenz beläuft sich auf $valueColor$lebenspunkte$resetColor von maximalen $valueColor$maxLebenspunkte$resetColor Punkten.\n" +
-                    "Deine Angriffskraft ist ehrenwert, sie beträgt $valueColor$angriff$resetColor.\n" +
-                    "Dein magisches Geschick, oh weiser $nameColor$name$resetColor, ist unübertroffen mit einem Werte von $valueColor$magie$resetColor.\n" +
-                    "Die Stärke deiner Verteidigung wird in den Annalen verzeichnet als $valueColor$verteidigung$resetColor.\n"
+                    "Edler ${Held.nameColor}$name${Held.resetColor}, bereit deine Weisheit und Macht zum Wohle der Lande einzusetzen.\n" +
+                    "Deine Lebensessenz beläuft sich auf ${Held.valueColor}$lebenspunkte${Held.resetColor} von maximalen ${Held.valueColor}$maxLebenspunkte${Held.resetColor} Punkten.\n" +
+                    "Deine Angriffskraft ist ehrenwert, sie beträgt ${Held.valueColor}$angriff${Held.resetColor}.\n" +
+                    "Dein magisches Geschick, oh weiser ${Held.nameColor}$name${Held.resetColor}, ist unübertroffen mit einem Werte von ${Held.valueColor}$magie${Held.resetColor}.\n" +
+                    "Die Stärke deiner Verteidigung wird in den Annalen verzeichnet als ${Held.valueColor}$verteidigung${Held.resetColor}.\n"
         )
 
         println(
-            "Du $nameColor$name$resetColor trettest dem Team bei:\n" +
-                    "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor\n" +
-                    "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
-                    "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +
-                    "$labelColor${"Verteidigung:"}$resetColor $valueColor$verteidigung$resetColor\n"
+            "Du ${Held.nameColor}$name${Held.resetColor} trettest dem Team bei:\n" +
+                    "${Held.labelColor}${"Lebenspunkte:"}${Held.resetColor} ${Held.valueColor}$lebenspunkte/$maxLebenspunkte${Held.resetColor}\n" +
+                    "${Held.labelColor}${"Angriff:"}${Held.resetColor} ${Held.valueColor}$angriff${Held.resetColor}\n" +
+                    "${Held.labelColor}${"Magie:"}${Held.resetColor} ${Held.valueColor}$magie${Held.resetColor}\n" +
+                    "${Held.labelColor}${"Verteidigung:"}${Held.resetColor} ${Held.valueColor}$verteidigung${Held.resetColor}\n"
         )
     }
 
     override fun angreifen(gegner: Boesewicht) {
-        println("Wähle eine manipulative Fähigkeit:\n")
-        println("1. Gedankenverwirrung (verursacht Schaden und kann den Gegner verwirren)")
-        println("2. Illusion erschaffen (verursacht Schaden und kann den Gegner für einen Zug lähmen)")
-        println("3. Realitätsverzerrung (geringerer Schaden, aber erhöht eigene Verteidigung)\n")
-        print("Deine Wahl: ")
+        println("Wähle deine Kampfhandlung:\n")
+        println("1. Schwertwirbel (Angriffsbasiert)")
+        println("2. Berserkerschlag (Erhöhter Angriff, geringere Genauigkeit)")
+        println("3. Schildhieb (Nutzt den Verteidigungswert)\n")
+        print("Deine Entscheidung: ")
 
         when (readln()) {
             "1" -> {
-                val selbstschaden = berechneSchaden(magie, 25)
-                gegner.erleideSchaden(selbstschaden)
-                println("$name verwirrt ${gegner.name}, der sich selbst $selbstschaden Schaden zufügt.\n")
+                val schaden = berechneSchaden(30, angriff)
+                gegner.lebenspunkte -= schaden
+                println("$name hat $schaden Schaden mit Klingenschwung verursacht.\n")
             }
 
             "2" -> {
-                val schaden = berechneSchaden(magie, 35)
+                val schaden = berechneSchaden(20, angriff * 2)
                 gegner.lebenspunkte -= schaden
-                if ((1..4).random() == 1) {
-                    gegner.laehmung = true
-                    println("$name fesselt $gegner.name mit einer Illusion. $gegner.name ist für einen Zug gelähmt und kann nicht angreifen.")
-                } else {
-                    println("$name erschafft eine Illusion und verursacht $schaden Schaden.")
-                }
+                println("$name hat $schaden Schaden mit Berserkerstoß verursacht.\n")
             }
 
             "3" -> {
-                val schaden = berechneSchaden(magie, 15)
+                val schaden = berechneSchaden(verteidigung, angriff / 2)
                 gegner.lebenspunkte -= schaden
-                println("$name verzerrt die Realität, verursacht $schaden Schaden und steigert seine Verteidigung.\n")
+                println("$name hat $schaden Schaden mit Schildschlag verursacht.\n")
             }
 
             else -> println("Das ist keine gültige Auswahl.")
@@ -125,7 +124,7 @@ class Manipulator(
             val verteidigungsBonus = 20
             urspruenglicheVerteidigung = verteidigung
             verteidigung += verteidigungsBonus
-            println("$nameColor$name$resetColor erhöht die Verteidigung um $verteidigungsBonus.")
+            println("${Held.nameColor}$name${Held.resetColor} erhöht die Verteidigung um $verteidigungsBonus.")
         }
         bonusRundenVerteidigung = 2
     }
@@ -135,11 +134,10 @@ class Manipulator(
             bonusRundenVerteidigung--
             if (bonusRundenVerteidigung == 0) {
                 verteidigung = urspruenglicheVerteidigung
-                println("$nameColor$name$resetColor Verteidigungsbonus ist ausgelaufen.")
+                println("${Held.nameColor}$name${Held.resetColor} Verteidigungsbonus ist ausgelaufen.")
             }
         }
     }
-
     override fun temporaereVerteidigungErhoehen(runden: Int) {
         if (bonusRundenVerteidigung == 0) {
             urspruenglicheVerteidigung = verteidigung

@@ -1,3 +1,8 @@
+package Funktionen
+
+import BoeseSeite.Boesewicht
+import GuteSeite.Held
+import Items.Beutel
 import javax.sound.sampled.AudioSystem
 import javax.sound.sampled.Clip
 import java.io.File
@@ -74,12 +79,12 @@ fun menu(held: Held) {
 
         when (readln()) {
             "1" -> {
-                println("Held ${Held.nameColor}${held.name}${Held.resetColor} geht ins Training...\n")
+                println("GuteSeite.Held ${Held.nameColor}${held.name}${Held.resetColor} geht ins Training...\n")
                 held.training()
             }
 
             "2" -> {
-                println("Held ${Held.nameColor}${held.name}${Held.resetColor} bereitet sich auf den Kampf vor...\n")
+                println("GuteSeite.Held ${Held.nameColor}${held.name}${Held.resetColor} bereitet sich auf den Kampf vor...\n")
                 println("Dein Gegner ist:\n")
                 val boesewicht = Boesewicht.erzeugeBoesewicht()
                 rundenbasierterKampf(held, boesewicht, beutel)
@@ -110,7 +115,7 @@ fun playSound(soundFileName: String) {
 }
 
 fun rundenbasierterKampf(held: Held, boesewicht: Boesewicht, beutel: Beutel) {
-    println("Der Held hat bisher ${Held.siege} mal gewonnen und ${Held.niederlagen} mal verloren.\n")
+    println("Der GuteSeite.Held hat bisher ${Held.siege} mal gewonnen und ${Held.niederlagen} mal verloren.\n")
     var runde = 1
 
     while (held.lebenspunkte > 0 && boesewicht.lebenspunkte > 0) {
@@ -128,7 +133,7 @@ fun rundenbasierterKampf(held: Held, boesewicht: Boesewicht, beutel: Beutel) {
         println("Was willst du tun?")
         println("1. Angreifen")
         println("2. Verteidigen")
-        println("3. Beutel benutzen\n")
+        println("3. Items.Beutel benutzen\n")
         print("Deine Wahl: \n")
         val aktion = readln()
 

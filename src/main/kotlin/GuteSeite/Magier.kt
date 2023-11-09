@@ -1,3 +1,6 @@
+package GuteSeite
+
+import BoeseSeite.Boesewicht
 import kotlin.random.Random
 
 class Magier(
@@ -20,17 +23,17 @@ class Magier(
 
     override fun heldenErstellen() {
         val namenMap = mapOf(
-            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "Magier von Mythria"),
+            "Myrion" to listOf("der Weise", "Hüter von Verlorener Hafen", "GuteSeite.Magier von Mythria"),
             "Lyrana" to listOf("Sternentänzerin", "Priesterin von Silberwald", "Botin der Sterne"),
-            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "Krieger der Tiefe"),
+            "Tharion" to listOf("Klingenmeister", "Wächter der Dunkelheit", "GuteSeite.Krieger der Tiefe"),
             "Elara" to listOf("Mondjägerin", "Waldgeister-Hüterin", "Bogenschützin von Elmswood"),
             "Draken" to listOf("Feuerseele", "Drachentöter", "Beschützer der Berge"),
             "Seraphel" to listOf("Windflüsterin", "Hohepriesterin der Wolken", "Göttin der Lüfte"),
-            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "Krieger des Abgrunds"),
+            "Varok" to listOf("Eisenfaust", "König der Unterwelt", "GuteSeite.Krieger des Abgrunds"),
             "Illyria" to listOf("Wasserwächterin", "Meeresprinzessin", "Herrin der Wellen"),
             "Orynn" to listOf("Steinhaut", "Bergbewahrer", "Zerstörer von Fels"),
             "Azura" to listOf("Himmelsbotin", "Göttin des Zwielichts", "Wächterin des Morgenrots"),
-            "Keldorn" to listOf("Sturmbringer", "Held von Mythria's Grenzen", "Vagabund des Westens"),
+            "Keldorn" to listOf("Sturmbringer", "GuteSeite.Held von Mythria's Grenzen", "Vagabund des Westens"),
             "Nylara" to listOf("Schattenweberin", "Herrin der Nacht", "Mondpriesterin"),
             "Aleris" to listOf("der Wächter", "Geist des Waldes", "Meister des Bogens"),
             "Brenna" to listOf("die Flammenweberin", "Beschwörerin des Feuers", "Hüterin der Asche"),
@@ -67,19 +70,19 @@ class Magier(
 
         println(
             "Siehe, ein neuer Adept betritt die Hallen von Zamnesia:\n" +
-                    "Edler $nameColor$name$resetColor, bereit deine Weisheit und Macht zum Wohle der Lande einzusetzen.\n" +
-                    "Deine Lebensessenz beläuft sich auf $valueColor$lebenspunkte$resetColor von maximalen $valueColor$maxLebenspunkte$resetColor Punkten.\n" +
-                    "Deine Angriffskraft ist ehrenwert, sie beträgt $valueColor$angriff$resetColor.\n" +
-                    "Dein magisches Geschick, oh weiser $nameColor$name$resetColor, ist unübertroffen mit einem Werte von $valueColor$magie$resetColor.\n" +
-                    "Die Stärke deiner Verteidigung wird in den Annalen verzeichnet als $valueColor$verteidigung$resetColor.\n"
+                    "Edler ${Held.nameColor}$name${Held.resetColor}, bereit deine Weisheit und Macht zum Wohle der Lande einzusetzen.\n" +
+                    "Deine Lebensessenz beläuft sich auf ${Held.valueColor}$lebenspunkte${Held.resetColor} von maximalen ${Held.valueColor}$maxLebenspunkte${Held.resetColor} Punkten.\n" +
+                    "Deine Angriffskraft ist ehrenwert, sie beträgt ${Held.valueColor}$angriff${Held.resetColor}.\n" +
+                    "Dein magisches Geschick, oh weiser ${Held.nameColor}$name${Held.resetColor}, ist unübertroffen mit einem Werte von ${Held.valueColor}$magie${Held.resetColor}.\n" +
+                    "Die Stärke deiner Verteidigung wird in den Annalen verzeichnet als ${Held.valueColor}$verteidigung${Held.resetColor}.\n"
         )
 
         println(
-                    "Du $nameColor$name$resetColor trettest dem Team bei:\n" +
-                    "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor\n" +
-                    "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
-                    "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +
-                    "$labelColor${"Verteidigung:"}$resetColor $valueColor$verteidigung$resetColor\n"
+                    "Du ${Held.nameColor}$name${Held.resetColor} trettest dem Team bei:\n" +
+                    "${Held.labelColor}${"Lebenspunkte:"}${Held.resetColor} ${Held.valueColor}$lebenspunkte/$maxLebenspunkte${Held.resetColor}\n" +
+                    "${Held.labelColor}${"Angriff:"}${Held.resetColor} ${Held.valueColor}$angriff${Held.resetColor}\n" +
+                    "${Held.labelColor}${"Magie:"}${Held.resetColor} ${Held.valueColor}$magie${Held.resetColor}\n" +
+                    "${Held.labelColor}${"Verteidigung:"}${Held.resetColor} ${Held.valueColor}$verteidigung${Held.resetColor}\n"
         )
     }
     override fun angreifen(gegner: Boesewicht) {
@@ -87,7 +90,7 @@ class Magier(
         println("1. Feuerball – Ein Geschoss geformt aus den Flammen der alten Welt.")
         println("2. Eissturm – Ein tobender Sturm, geboren aus dem Atem des Frostes.")
         println("3. Blitzschlag – Ein zorniger Fingerzeig der Himmelsgötter.\n")
-        print("Welcher Pfad soll beschritten werden? Eure Entscheidung, Magier: ")
+        print("Welcher Pfad soll beschritten werden? Eure Entscheidung, GuteSeite.Magier: ")
 
         when (readln()) {
             "1" -> {

@@ -1,3 +1,14 @@
+package Funktionen
+
+import BoeseSeite.Boesewicht
+import BoeseSeite.Drache
+import BoeseSeite.DunklerMagier
+import BoeseSeite.Schattenhelfer
+import GuteSeite.Held
+import GuteSeite.Krieger
+import GuteSeite.Magier
+import GuteSeite.Manipulator
+import Items.Beutel
 import java.io.File
 import java.io.IOException
 import kotlin.random.Random
@@ -61,9 +72,9 @@ fun teamTraining(team: List<Held>) {
     println("Wen möchtest du trainieren?")
     team.forEachIndexed { index, held ->
         val heldenRolle = when (held) {
-            is Krieger -> "Krieger"
-            is Magier -> "Magier"
-            is Manipulator -> "Manipulator"
+            is Krieger -> "GuteSeite.Krieger"
+            is Magier -> "GuteSeite.Magier"
+            is Manipulator -> "GuteSeite.Manipulator"
             else -> "Unbekannt"
         }
         println("$blau${index + 1}. ${held.name} $reset($heldenRolle)")
@@ -90,9 +101,9 @@ fun speichern(team: List<Held>) {
         File(dateiName).bufferedWriter().use { out ->
             team.forEach { held ->
                 val typ = when (held) {
-                    is Krieger -> "Krieger"
-                    is Magier -> "Magier"
-                    is Manipulator -> "Manipulator"
+                    is Krieger -> "GuteSeite.Krieger"
+                    is Magier -> "GuteSeite.Magier"
+                    is Manipulator -> "GuteSeite.Manipulator"
                     else -> throw IllegalArgumentException("Unbekannter Heldentyp")
                 }
                 val daten =
@@ -130,9 +141,9 @@ fun laden(): List<Held>? {
             val daten = line.split(",")
             if (daten.size >= 7) {
                 val held = when (val typ = daten[0]) {
-                    "Krieger" -> Krieger()
-                    "Magier" -> Magier()
-                    "Manipulator" -> Manipulator()
+                    "GuteSeite.Krieger" -> Krieger()
+                    "GuteSeite.Magier" -> Magier()
+                    "GuteSeite.Manipulator" -> Manipulator()
                     else -> throw IllegalArgumentException("Unbekannter Heldentyp: $typ")
                 }
                 held.name = daten[1]
@@ -267,7 +278,7 @@ fun rundenbasierterKampfTeam(team: List<Held>, boesewicht: Boesewicht, beutel: B
                 println("Was soll ${held.name} tun?")
                 println("1. Angreifen")
                 println("2. Verteidigen")
-                println("3. Beutel benutzen\n")
+                println("3. Items.Beutel benutzen\n")
                 print("Deine Wahl: \n")
                 val aktion = readln()
 
@@ -296,7 +307,7 @@ fun rundenbasierterKampfTeam(team: List<Held>, boesewicht: Boesewicht, beutel: B
                 boesewicht.laehmung = false
             } else {
                 if (boesewicht.lebenspunkte.toDouble() / boesewicht.maxLebenspunkte <= 0.4 && !schattenhelferAktiv) {
-                    println("${boesewicht.name} ruft einen Schattenhelfer zur Hilfe!")
+                    println("${boesewicht.name} ruft einen BoeseSeite.Schattenhelfer zur Hilfe!")
                     schattenhelferAktiv = true
                     schattenhelferRundenZaehler = 3
                 }
