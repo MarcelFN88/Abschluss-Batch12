@@ -2,12 +2,7 @@
 
 
 
-
-
-
-
-
-# Abenteuerspiel - Kotlin Text-based Adventure
+# Abenteuerspiel
 
 Das Abenteuerspiel ist ein in Kotlin geschriebenes textbasiertes Spiel. Die Spieler können zwischen Einzelmodus und Teammodus wählen, ihren Helden trainieren, gegen Bösewichte kämpfen und ihre Spielstände verwalten.
 

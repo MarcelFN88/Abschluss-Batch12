@@ -75,7 +75,7 @@ class Magier(
         )
 
         println(
-                    "Du$nameColor$name$resetColor trettest dem Team bei:\n" +
+                    "Du $nameColor$name$resetColor trettest dem Team bei:\n" +
                     "$labelColor${"Lebenspunkte:"}$resetColor $valueColor$lebenspunkte/$maxLebenspunkte$resetColor\n" +
                     "$labelColor${"Angriff:"}$resetColor $valueColor$angriff$resetColor\n" +
                     "$labelColor${"Magie:"}$resetColor $valueColor$magie$resetColor\n" +

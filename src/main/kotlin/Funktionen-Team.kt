@@ -238,8 +238,8 @@ fun starteRundenbasiertenKampf(team: List<Held>, boesewicht: Boesewicht, beutel:
 
 fun rundenbasierterKampfTeam(team: List<Held>, boesewicht: Boesewicht, beutel: Beutel) {
     println("Das Team hat bisher ${Held.siege} mal gewonnen und ${Held.niederlagen} mal verloren.\n")
-    println("Debug: Teamlebenspunkte zu Beginn des Kampfes: ${team.sumOf { it.lebenspunkte }}")
-    println("Debug: Bösewichtlebenspunkte zu Beginn des Kampfes: ${boesewicht.lebenspunkte}")
+//    println("Debug: Teamlebenspunkte zu Beginn des Kampfes: ${team.sumOf { it.lebenspunkte }}")
+//    println("Debug: Bösewichtlebenspunkte zu Beginn des Kampfes: ${boesewicht.lebenspunkte}")
 
     var runde = 1
     var schattenhelferAktiv = false
